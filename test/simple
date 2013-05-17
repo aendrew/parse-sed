@@ -1,0 +1,11 @@
+#!/bin/sh
+SED=${SED?Please set SED}
+
+res=$(echo foo | $SED)
+case $res in
+  (foo) ;;
+  (*) exit 9 ;;
+esac
+
+printf "%s passed\n" "$0"
+exit 0
