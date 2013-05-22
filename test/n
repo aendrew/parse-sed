@@ -1,9 +1,9 @@
 #!/bin/sh
 : ${SED?}
 
-res=$(echo foo | $SED '')
+res=$(echo foo | $SED -n '')
 case $res in
-  (foo) ;;
+  ('') ;;
   (*) exit 9 ;;
 esac
 

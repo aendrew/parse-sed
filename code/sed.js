@@ -1,9 +1,12 @@
 #!/usr/bin/env coffee
 
 async = require 'async'
+optimist = require 'optimist'
+argv = optimist.posix().boolean('n').argv
 
 eachLine = (line, cb) ->
-  process.stdout.write line + '\n'
+  unless argv.n
+    process.stdout.write line + '\n'
   cb()
 buf = ''
 process.stdin.on 'data', (data) ->
