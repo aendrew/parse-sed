@@ -1,0 +1,12 @@
+#!/bin/sh
+: ${SED?}
+
+res=$(echo foo | $SED 'a\
+bar
+')
+case $res in
+  ('foo
+bar') ;;
+  (*) exit 9 ;;
+esac
+printf '%s passed\n' "$0"
