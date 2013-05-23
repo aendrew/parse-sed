@@ -9,6 +9,8 @@ script = ''
 if not argv.e and not argv.f
   script = argv._.shift()
 
+# If *s* (a string) has the form of a number, coerce it to
+# an integer and return it; otherwise, return *s* unchanged.
 intify = (s) ->
   x = Number(s)
   if not isNaN(x)
