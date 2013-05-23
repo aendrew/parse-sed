@@ -9,4 +9,16 @@ case $res in
 bar') ;;
   (*) exit 9 ;;
 esac
+
+res=$(echo foo | $SED 'a\
+bar
+a\
+baz
+')
+case $res in
+  ('foo
+bar
+baz') ;;
+  (*) exit 8 ;;
+esac
 printf '%s passed\n' "$0"
