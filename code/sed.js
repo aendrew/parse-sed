@@ -60,13 +60,29 @@ eachLine = (line, cb) ->
   # List of delayed functions to call to append stuff after the
   # cycle output (typically 'a' and 'r' verbs).
   appends = []
+
+  addrMatch = (addr) ->
+    if typeof addr is 'number'
+      return currentLine == addr
+
   _.each commands, (cmd) ->
-    execute = true
+    # 0 address.
+    if not cmd.addr1 and not cmd.addr2
+      execute = true
+    # One address.
     if cmd.addr1 and not cmd.addr2
-      execute = false
-      if typeof cmd.addr1 is 'number'
-        if currentLine == cmd.addr1
+      execute = addrMatch cmd.addr1
+    # Two address.
+    if cmd.addr1 and cmd.addr2
+      if not cmd.flipped
+        execute = false
+        if addrMatch cmd.addr1
           execute = true
+          cmd.flipped = true
+      else
+        execute = true
+        if addrMatch cmd.addr2
+          cmd.flipped = false
     if execute
       if 'a' == cmd.verb
         appends.push -> cmd.arg
