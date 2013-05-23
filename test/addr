@@ -1,0 +1,15 @@
+#!/bin/sh
+: ${SED?}
+
+res=$(printf 'line %s\n' 1 2 3 | $SED '2a\
+bar
+')
+case $res in
+  ('line 1
+line 2
+bar
+line 3') ;;
+  (*) exit 9 ;;
+esac
+
+printf '%s passed\n' "$0"

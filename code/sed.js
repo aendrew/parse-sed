@@ -9,6 +9,12 @@ script = ''
 if not argv.e and not argv.f
   script = argv._.shift()
 
+intify = (s) ->
+  x = Number(s)
+  if not isNaN(x)
+    return 0|x
+  return s
+
 parseScript = (s) ->
   cmds = []
   while true
@@ -33,8 +39,8 @@ parse1 = (s) ->
   if not m
     return [null, null]
   cmd = {}
-  cmd.addr1 = m[1]
-  cmd.addr2 = m[2]
+  cmd.addr1 = intify m[1]
+  cmd.addr2 = intify m[2]
   cmd.positive = not m[3]
   cmd.verb = m[4][0]
   if 'a' == cmd.verb
@@ -48,13 +54,22 @@ parse1 = (s) ->
 
 commands = parseScript script
 
+currentLine = 0
 eachLine = (line, cb) ->
+  currentLine += 1
   # List of delayed functions to call to append stuff after the
   # cycle output (typically 'a' and 'r' verbs).
   appends = []
   _.each commands, (cmd) ->
-    if 'a' == cmd.verb
-      appends.push -> cmd.arg
+    execute = true
+    if cmd.addr1 and not cmd.addr2
+      execute = false
+      if typeof cmd.addr1 is 'number'
+        if currentLine == cmd.addr1
+          execute = true
+    if execute
+      if 'a' == cmd.verb
+        appends.push -> cmd.arg
   unless argv.n
     process.stdout.write line + '\n'
   for append in appends
