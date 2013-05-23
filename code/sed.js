@@ -35,8 +35,8 @@ parse1 = (s) ->
       (?:, (\d+|\$|/(?:[^\\]|\\.)*/))? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    (a\\)                           # Command
-  ///
+    (a\\|p)                         # Command
+  ///g
   m = re.exec s
   if not m
     return [null, null]
@@ -45,6 +45,7 @@ parse1 = (s) ->
   cmd.addr2 = intify m[2]
   cmd.positive = not m[3]
   cmd.verb = m[4][0]
+  s = s[re.lastIndex..]
   if 'a' == cmd.verb
     # Delete through newline.
     s = s.replace /^.*?\n/, ''
@@ -92,6 +93,8 @@ eachLine = (line, cb) ->
     if execute
       if 'a' == cmd.verb
         appends.push -> cmd.arg
+      if 'p' == cmd.verb
+        process.stdout.write line + '\n'
   unless argv.n
     process.stdout.write line + '\n'
   for append in appends
