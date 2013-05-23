@@ -81,6 +81,10 @@ eachLine = (line, cb) ->
         if addrMatch cmd.addr1
           execute = true
           cmd.flipped = true
+          # There is a bit of a special case for numeric 2nd addrs
+          if typeof cmd.addr2 == 'number'
+            if cmd.addr2 <= currentLine
+              cmd.flipped = false
       else
         execute = true
         if addrMatch cmd.addr2

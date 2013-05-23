@@ -27,4 +27,19 @@ line 4') ;;
   (*) exit 8 ;;
 esac
 
+# From the spec: "If the second address is a number
+# less than or equal to the line number first selected,
+# only one line shall be selected."
+res=$(printf 'line %s\n' 1 2 3 4 | $SED '3,2a\
+bar
+')
+case $res in
+  ('line 1
+line 2
+line 3
+bar
+line 4') ;;
+  (*) exit 7 ;;
+esac
+
 printf '%s passed\n' "$0"
