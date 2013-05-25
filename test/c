@@ -1,0 +1,14 @@
+#!/bin/sh
+: ${SED?}
+
+# Change
+res=$(printf '%s\n' 1 2 3 4 5 | $SED '2,4c\
+changed')
+case $res in
+  ('1
+changed
+5') ;;
+  (*) exit 9 ;;
+esac
+
+printf '%s passed\n' "$0"
