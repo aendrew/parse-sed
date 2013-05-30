@@ -1,7 +1,9 @@
 #!/bin/sh
 : ${SED?}
 
-res=$(echo foo | $SED 'a\
+alias sed="$SED"
+
+res=$(echo foo | sed 'a\
 bar
 ')
 case $res in
@@ -10,7 +12,7 @@ bar') ;;
   (*) exit 9 ;;
 esac
 
-res=$(echo foo | $SED 'a\
+res=$(echo foo | sed 'a\
 bar
 a\
 baz

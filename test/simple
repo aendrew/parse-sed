@@ -1,7 +1,9 @@
 #!/bin/sh
 : ${SED?}
 
-res=$(echo foo | $SED '')
+alias sed="$SED"
+
+res=$(echo foo | sed '')
 case $res in
   (foo) ;;
   (*) exit 9 ;;

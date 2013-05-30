@@ -1,8 +1,10 @@
 #!/bin/sh
 : ${SED?}
 
+alias sed="$SED"
+
 # Print every other line.
-res=$(printf '%s\n' 1 2 3 4 5 | $SED -n 'p;N')
+res=$(printf '%s\n' 1 2 3 4 5 | sed -n 'p;N')
 case $res in
   ('1
 3
@@ -12,7 +14,7 @@ esac
 
 # The POSIX behaviour for N is to not print the pattern space
 # if a line cannot be read.
-res=$(printf '%s\n' 1 2 3 4 5 | $SED 'N')
+res=$(printf '%s\n' 1 2 3 4 5 | sed 'N')
 case $res in
   ('1
 2

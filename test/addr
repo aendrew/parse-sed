@@ -1,8 +1,10 @@
 #!/bin/sh
 : ${SED?}
 
+alias sed="$SED"
+
 # Single numeric address
-res=$(printf 'line %s\n' 1 2 3 | $SED '2a\
+res=$(printf 'line %s\n' 1 2 3 | sed '2a\
 bar
 ')
 case $res in
@@ -14,29 +16,22 @@ line 3') ;;
 esac
 
 # Two numeric addresses
-res=$(printf 'line %s\n' 1 2 3 4 | $SED '2,3a\
-bar
-')
+res=$(printf 'line %s\n' 1 2 3 4 | sed -n '2,3p')
 case $res in
-  ('line 1
-line 2
-bar
-line 3
-bar
-line 4') ;;
+  ('line 2
+line 3') ;;
   (*) exit 8 ;;
 esac
 
 # From the spec: "If the second address is a number
 # less than or equal to the line number first selected,
 # only one line shall be selected."
-res=$(printf 'line %s\n' 1 2 3 4 | $SED '3,2a\
+res=$(printf 'line %s\n' 1 2 3 4 | sed '3,2c\
 bar
 ')
 case $res in
   ('line 1
 line 2
-line 3
 bar
 line 4') ;;
   (*) exit 7 ;;

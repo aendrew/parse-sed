@@ -1,7 +1,9 @@
 #!/bin/sh
 : ${SED?}
 
-res=$(printf 'line %s\n' 1 2 3 4 | $SED -n '2,3p')
+alias sed="$SED"
+
+res=$(printf 'line %s\n' 1 2 3 4 | sed -n '2,3p')
 case $res in
   ('line 2
 line 3') ;;
