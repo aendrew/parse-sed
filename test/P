@@ -1,0 +1,23 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+# Print every other line.
+res=$(printf '%s\n' 1 2 3 4 5 | sed -n 'N;P')
+case $res in
+  ('1
+3') ;;
+  (*) exit 9 ;;
+esac
+
+# Normal case (pattern space has no newline).
+res=$(printf '%s\n' 1 2 3 | sed -n 'P')
+case $res in
+  ('1
+2
+3') ;;
+  (*) exit 8 ;;
+esac
+
+printf '%s passed\n' "$0"
