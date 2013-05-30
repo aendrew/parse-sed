@@ -10,4 +10,15 @@ case $res in
   (*) exit 9 ;;
 esac
 
+# The POSIX behaviour for N is to not print the pattern space
+# if a line cannot be read.
+res=$(printf '%s\n' 1 2 3 4 5 | $SED 'N')
+case $res in
+  ('1
+2
+3
+4') ;;
+  (*) exit 8 ;;
+esac
+
 printf '%s passed\n' "$0"
