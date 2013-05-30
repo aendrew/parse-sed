@@ -1,0 +1,15 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed=$SED
+
+# Delete line 1
+res=$(printf '%s\n' 1 2 3 4 | sed 'N;2D')
+case $res in
+  ('2
+3
+4') ;;
+  (*) exit 9 ;;
+esac
+
+printf '%s passed\n' "$0"

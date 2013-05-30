@@ -35,7 +35,7 @@ parse1 = (s) ->
       (?:, (\d+|\$|/(?:[^\\]|\\.)*/))? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|N|p)                    # Command
+    ([ac]\\|D|N|p)                  # Command
   ///g
   m = re.exec s
   if not m
@@ -113,6 +113,12 @@ beginScript = (line, nextLine) ->
         pattern = null
         if endRange
           process.stdout.write cmd.arg + '\n'
+        nextCmd 'cycle'
+      if 'D' == cmd.verb
+        if '\n' in pattern
+          pattern = pattern.replace /^.*?\n/, ''
+        else
+          pattern = null
         nextCmd 'cycle'
       if 'N' == cmd.verb
         indirectTo = (line) ->
