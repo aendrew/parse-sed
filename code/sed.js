@@ -35,7 +35,7 @@ parse1 = (s) ->
       (?:, (\d+|\$|/(?:[^\\]|\\.)*/))? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|[DGghNPp])              # Command
+    ([ac]\\|[DGgHhNPp])             # Command
   ///g
   m = re.exec s
   if not m
@@ -125,6 +125,8 @@ beginScript = (line, nextLine) ->
         pattern += '\n' + hold
       if 'g' == cmd.verb
         pattern = hold
+      if 'H' == cmd.verb
+        hold += '\n' + pattern
       if 'h' == cmd.verb
         hold = pattern
       if 'N' == cmd.verb

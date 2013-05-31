@@ -1,0 +1,23 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+res=$(printf '%s\n' 1 2 | sed 'h;H;g')
+case $res in
+  ('1
+1
+2
+2') ;;
+  (*) exit 9 ;;
+esac
+
+# Check that initial hold space is the empty string.
+res=$(printf '%s\n' 1 | sed 'H;g')
+case $res in
+  ('
+1') ;;
+  (*) exit 8 ;;
+esac
+
+printf '%s passed\n' "$0"
