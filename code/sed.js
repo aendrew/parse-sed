@@ -35,7 +35,7 @@ parse1 = (s) ->
       (?:, (\d+|\$|/(?:[^\\]|\\.)*/))? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|[DNPp])                 # Command
+    ([ac]\\|[DghNPp])               # Command
   ///g
   m = re.exec s
   if not m
@@ -65,6 +65,7 @@ commands = parseScript script
 indirectTo = null
 currentLine = 0
 pattern = null
+hold = null
 beginScript = (line, nextLine) ->
   if pattern is null
     pattern = line
@@ -120,6 +121,10 @@ beginScript = (line, nextLine) ->
         else
           pattern = null
         nextCmd 'cycle'
+      if 'g' == cmd.verb
+        pattern = hold
+      if 'h' == cmd.verb
+        hold = pattern
       if 'N' == cmd.verb
         indirectTo = (line) ->
           pattern += '\n' + line
