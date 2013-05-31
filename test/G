@@ -14,4 +14,13 @@ case $res in
   (*) exit 9 ;;
 esac
 
+# Check that initial hold space is the empty string.
+res=$(printf '%s\n' 1 2 | sed '1G')
+case $res in
+  ('1
+
+2') ;;
+  (*) exit 8 ;;
+esac
+
 printf '%s passed\n' "$0"

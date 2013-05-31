@@ -65,7 +65,7 @@ commands = parseScript script
 indirectTo = null
 currentLine = 0
 pattern = null
-hold = null
+hold = ''
 beginScript = (line, nextLine) ->
   if pattern is null
     pattern = line
