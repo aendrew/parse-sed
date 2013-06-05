@@ -64,6 +64,7 @@ commands = parseScript script
 # execution, but functions like 'N' can change that).
 indirectTo = null
 currentLine = 0
+finalLine = false
 pattern = null
 hold = ''
 beginScript = (line, nextLine) ->
@@ -94,6 +95,8 @@ beginScript = (line, nextLine) ->
 addrMatch = (addr) ->
   if typeof addr is 'number'
     return currentLine == addr
+  if addr == '$'
+    return finalLine
 
 evalAddr = (cmd) ->
   endRange = false
@@ -167,11 +170,33 @@ eachLine = (line, cb) ->
   return indirectTo line, cb
 
 buf = ''
+processing = false
+ended = false
 process.stdin.on 'data', (data) ->
   process.stdin.pause()
+  processing = true
   buf += data
   lines = buf.split '\n'
   buf = lines.pop()
+  if buf == '' and lines.length
+    # Retain last line of data, as it might be the final
+    # line of input.
+    buf = lines.pop() + '\n'
   async.eachSeries lines, eachLine, () ->
+    processing = false
     process.stdin.resume()
+  if ended
+    # Must have been set during the async call.
+    finalBuf()
 
+process.stdin.on 'end', () ->
+  ended = true 
+  if not processing
+    finalBuf()
+
+finalBuf = () ->
+  lines = buf.split '\n'
+  lines.pop()
+  if lines.length
+    finalLine = true
+    eachLine lines[0], ->
