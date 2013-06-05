@@ -1,0 +1,26 @@
+printf '%s\n' 01011 00010 | sed -n '
+1{h;d}
+s/$/,/;x;s/$/,/
+:loop
+  /1,/b dec
+:shift
+  /^,/b quit
+  s/0,/,0/;x;s/\(.\),/,\1/;x
+  b loop
+:dec
+  s/1,/0,/
+  x
+    s/1,/2,/;s/0,/1,/
+    t carry
+  :carry
+    s/02/10/
+    s/12/20/
+    t carry
+  x
+  b loop
+:quit
+  x
+  s/,//
+  p
+  q
+'
