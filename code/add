@@ -1,7 +1,7 @@
 #!/bin/sh
 # Add binary numbers in sed
 
-printf '%s\n' 01011 00010 | sed -n '
+printf '%s\n' ${@:-$(cat)} | sed -n '
 s/$/,/
 1{h;d}
 :loop
