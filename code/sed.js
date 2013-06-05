@@ -79,10 +79,9 @@ beginScript = (line, nextLine) ->
   async.eachSeries commands, (cmd, nextCmd) ->
     [execute, endRange] = evalAddr cmd
 
-    if execute
+    if execute == cmd.positive
       return evalFunction cmd, endRange, appends, nextCmd, nextLine
     nextCmd()
-
   , () ->
     # Pattern space may have been deleted (EG 'c' function).
     if not argv.n and pattern isnt null
