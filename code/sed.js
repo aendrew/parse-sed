@@ -76,37 +76,9 @@ beginScript = (line, nextLine) ->
   # cycle output (typically 'a' and 'r' verbs).
   appends = []
 
-  addrMatch = (addr) ->
-    if typeof addr is 'number'
-      return currentLine == addr
-
   async.eachSeries commands, (cmd, nextCmd) ->
-    endRange = false
-    # 0 address.
-    if not cmd.addr1 and not cmd.addr2
-      execute = true
-      endRange = true
-    # One address.
-    if cmd.addr1 and not cmd.addr2
-      execute = addrMatch cmd.addr1
-      endRange = true
-    # Two address.
-    if cmd.addr1 and cmd.addr2
-      if not cmd.flipped
-        execute = false
-        if addrMatch cmd.addr1
-          execute = true
-          cmd.flipped = true
-          # There is a bit of a special case for numeric 2nd addrs
-          if typeof cmd.addr2 == 'number'
-            if cmd.addr2 <= currentLine
-              cmd.flipped = false
-              endRange = true
-      else
-        execute = true
-        if addrMatch cmd.addr2
-          cmd.flipped = false
-          endRange = true
+    [execute, endRange] = evalAddr cmd
+
     if execute
       if 'a' == cmd.verb
         appends.push -> (cmd.arg + '\n')
@@ -152,6 +124,39 @@ beginScript = (line, nextLine) ->
     for append in appends
       process.stdout.write append()
     nextLine()
+
+addrMatch = (addr) ->
+  if typeof addr is 'number'
+    return currentLine == addr
+
+evalAddr = (cmd) ->
+  endRange = false
+  # 0 address.
+  if not cmd.addr1 and not cmd.addr2
+    execute = true
+    endRange = true
+  # One address.
+  if cmd.addr1 and not cmd.addr2
+    execute = addrMatch cmd.addr1
+    endRange = true
+  # Two address.
+  if cmd.addr1 and cmd.addr2
+    if not cmd.flipped
+      execute = false
+      if addrMatch cmd.addr1
+        execute = true
+        cmd.flipped = true
+        # There is a bit of a special case for numeric 2nd addrs
+        if typeof cmd.addr2 == 'number'
+          if cmd.addr2 <= currentLine
+            cmd.flipped = false
+            endRange = true
+    else
+      execute = true
+      if addrMatch cmd.addr2
+        cmd.flipped = false
+        endRange = true
+  return [execute, endRange]
 
 indirectTo = beginScript
 eachLine = (line, cb) ->

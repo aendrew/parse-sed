@@ -8,7 +8,9 @@ Current status:
  * Single script argument
  * ```-n``` option implemented
  * no file arguments
- * Only the 'a' verb is implemented
+ * Only a few verbs are implemented:
+ * * a, c, D, G, g, H, h, N, p
+ * Only numeric addresses are allowed
 
 # Tests
 
