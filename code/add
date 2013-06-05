@@ -2,8 +2,8 @@
 # Add binary numbers in sed
 
 printf '%s\n' 01011 00010 | sed -n '
+s/$/,/
 1{h;d}
-s/$/,/;x;s/$/,/
 :loop
   /1,/b dec
 :shift
@@ -17,9 +17,10 @@ s/$/,/;x;s/$/,/
   :carry
     s/02/10/
     s/12/20/
+    s/^2/10/
     t carry
   x
-  b loop
+  b shift
 :quit
   x
   s/,//p
