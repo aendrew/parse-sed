@@ -6,11 +6,11 @@ Intended to be POSIX compliant (but not yet).
 
 Current status:
  * Single script argument
- * ```-n``` option implemented
+ * `-n` option implemented
  * no file arguments
  * Only a few verbs are implemented:
  * * a, c, D, G, g, H, h, N, p
- * Only numeric addresses are allowed
+ * The only addresses implemented are numeric and `$`
 
 # Tests
 
