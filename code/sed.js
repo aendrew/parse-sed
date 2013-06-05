@@ -80,42 +80,9 @@ beginScript = (line, nextLine) ->
     [execute, endRange] = evalAddr cmd
 
     if execute
-      if 'a' == cmd.verb
-        appends.push -> (cmd.arg + '\n')
-      if 'c' == cmd.verb
-        pattern = null
-        if endRange
-          process.stdout.write cmd.arg + '\n'
-        nextCmd 'cycle'
-      if 'D' == cmd.verb
-        if '\n' in pattern
-          pattern = pattern.replace /^.*?\n/, ''
-        else
-          pattern = null
-        nextCmd 'cycle'
-      if 'G' == cmd.verb
-        pattern += '\n' + hold
-      if 'g' == cmd.verb
-        pattern = hold
-      if 'H' == cmd.verb
-        hold += '\n' + pattern
-      if 'h' == cmd.verb
-        hold = pattern
-      if 'N' == cmd.verb
-        indirectTo = (line) ->
-          pattern += '\n' + line
-          currentLine += 1
-          indirectTo = beginScript
-          nextCmd()
-        return nextLine()
-      if 'P' == cmd.verb
-        if '\n' in pattern
-          process.stdout.write pattern[..pattern.indexOf '\n']
-        else
-          process.stdout.write pattern + '\n'
-      if 'p' == cmd.verb
-        process.stdout.write pattern + '\n'
+      return evalFunction cmd, endRange, appends, nextCmd, nextLine
     nextCmd()
+
   , () ->
     # Pattern space may have been deleted (EG 'c' function).
     if not argv.n and pattern isnt null
@@ -157,6 +124,44 @@ evalAddr = (cmd) ->
         cmd.flipped = false
         endRange = true
   return [execute, endRange]
+
+evalFunction = (cmd, endRange, appends, nextCmd, nextLine) ->
+  if 'a' == cmd.verb
+    appends.push -> (cmd.arg + '\n')
+  if 'c' == cmd.verb
+    pattern = null
+    if endRange
+      process.stdout.write cmd.arg + '\n'
+    return nextCmd 'cycle'
+  if 'D' == cmd.verb
+    if '\n' in pattern
+      pattern = pattern.replace /^.*?\n/, ''
+    else
+      pattern = null
+    return nextCmd 'cycle'
+  if 'G' == cmd.verb
+    pattern += '\n' + hold
+  if 'g' == cmd.verb
+    pattern = hold
+  if 'H' == cmd.verb
+    hold += '\n' + pattern
+  if 'h' == cmd.verb
+    hold = pattern
+  if 'N' == cmd.verb
+    indirectTo = (line) ->
+      pattern += '\n' + line
+      currentLine += 1
+      indirectTo = beginScript
+      nextCmd()
+    return nextLine()
+  if 'P' == cmd.verb
+    if '\n' in pattern
+      process.stdout.write pattern[..pattern.indexOf '\n']
+    else
+      process.stdout.write pattern + '\n'
+  if 'p' == cmd.verb
+    process.stdout.write pattern + '\n'
+  nextCmd()
 
 indirectTo = beginScript
 eachLine = (line, cb) ->
