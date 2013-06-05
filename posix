@@ -13,7 +13,7 @@ sed.js is implemented to follow the GNU behaviour.
 
 The difference is illustrated with the following script:
 
-    printf '%d\n' 1 2 3 4 5 | sed 'N;2D;3p'
+    printf '%d\n' 1 2 3 4 5 | sed -n 'N;2D;3p'
 
 The first cycle proceeds by executing 'N' (bring line 2 into the
 pattern space, and changing the current line number to 2), and then
