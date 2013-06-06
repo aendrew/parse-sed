@@ -63,12 +63,12 @@ commands = parseScript script
 # execution, but functions like 'N' can change that).
 indirectTo = null
 finalLine = false
-pattern = null
 hold = ''
 
 class Sed
   constructor: () ->
     @currentLine = 0
+    @pattern = null
 
   addrMatch: (addr) ->
     if typeof addr is 'number'
@@ -87,10 +87,10 @@ class Sed
       eachLine lines[0], ->
 
   beginScript: (line, nextLine) ->
-    if pattern is null
-      pattern = line
+    if @pattern is null
+      @pattern = line
     else
-      pattern += '\n' + line
+      @pattern += '\n' + line
     @currentLine += 1
     # List of delayed functions to call to append stuff after the
     # cycle output (typically 'a' and 'r' verbs).
@@ -102,11 +102,11 @@ class Sed
       if execute == cmd.positive
         return @evalFunction cmd, endRange, appends, nextCmd, nextLine
       nextCmd()
-    , () ->
+    , () =>
       # Pattern space may have been deleted (EG 'c' function).
-      if not argv.n and pattern isnt null
-        process.stdout.write pattern + '\n'
-      pattern = null
+      if not argv.n and @pattern isnt null
+        process.stdout.write @pattern + '\n'
+      @pattern = null
       for append in appends
         process.stdout.write append()
       nextLine()
@@ -144,38 +144,38 @@ class Sed
     if 'a' == cmd.verb
       appends.push -> (cmd.arg + '\n')
     if 'c' == cmd.verb
-      pattern = null
+      @pattern = null
       if endRange
         process.stdout.write cmd.arg + '\n'
       return nextCmd 'cycle'
     if 'D' == cmd.verb
-      if '\n' in pattern
-        pattern = pattern.replace /^.*?\n/, ''
+      if '\n' in @pattern
+        @pattern = @pattern.replace /^.*?\n/, ''
       else
-        pattern = null
+        @pattern = null
       return nextCmd 'cycle'
     if 'G' == cmd.verb
-      pattern += '\n' + hold
+      @pattern += '\n' + hold
     if 'g' == cmd.verb
-      pattern = hold
+      @pattern = hold
     if 'H' == cmd.verb
-      hold += '\n' + pattern
+      hold += '\n' + @pattern
     if 'h' == cmd.verb
-      hold = pattern
+      hold = @pattern
     if 'N' == cmd.verb
       indirectTo = (line) =>
-        pattern += '\n' + line
+        @pattern += '\n' + line
         @currentLine += 1
         indirectTo = => @beginScript.apply @, arguments
         nextCmd()
       return nextLine()
     if 'P' == cmd.verb
-      if '\n' in pattern
-        process.stdout.write pattern[..pattern.indexOf '\n']
+      if '\n' in @pattern
+        process.stdout.write @pattern[..@pattern.indexOf '\n']
       else
-        process.stdout.write pattern + '\n'
+        process.stdout.write @pattern + '\n'
     if 'p' == cmd.verb
-      process.stdout.write pattern + '\n'
+      process.stdout.write @pattern + '\n'
     nextCmd()
 
 sed = new Sed
