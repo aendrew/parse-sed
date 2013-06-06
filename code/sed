@@ -63,12 +63,12 @@ commands = parseScript script
 # execution, but functions like 'N' can change that).
 indirectTo = null
 finalLine = false
-hold = ''
 
 class Sed
   constructor: () ->
     @currentLine = 0
     @pattern = null
+    @hold = ''
 
   addrMatch: (addr) ->
     if typeof addr is 'number'
@@ -155,13 +155,13 @@ class Sed
         @pattern = null
       return nextCmd 'cycle'
     if 'G' == cmd.verb
-      @pattern += '\n' + hold
+      @pattern += '\n' + @hold
     if 'g' == cmd.verb
-      @pattern = hold
+      @pattern = @hold
     if 'H' == cmd.verb
-      hold += '\n' + @pattern
+      @hold += '\n' + @pattern
     if 'h' == cmd.verb
-      hold = @pattern
+      @hold = @pattern
     if 'N' == cmd.verb
       indirectTo = (line) =>
         @pattern += '\n' + line
