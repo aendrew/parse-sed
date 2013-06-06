@@ -193,6 +193,9 @@ process.stdin.on 'end', () ->
   if not processing
     finalBuf()
 
+'''Process the final line of input (after the 'end' event
+has been handled).
+'''
 finalBuf = () ->
   lines = buf.split '\n'
   lines.pop()
