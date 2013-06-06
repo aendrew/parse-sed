@@ -1,6 +1,5 @@
 #!/usr/bin/env coffee
 
-_= require 'underscore'
 async = require 'async'
 optimist = require 'optimist'
 argv = optimist.posix().boolean('n').argv
