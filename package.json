@@ -2,9 +2,9 @@
   "name": "sed.js",
   "version": "0.0.0",
   "description": "Unix sed for node.js",
-  "main": "code/sed.js",
+  "main": "code/sed",
   "scripts": {
-    "test": "SED=code/sed.js test/all"
+    "test": "SED=code/sed test/all"
   },
   "repository": "",
   "keywords": [
