@@ -57,18 +57,17 @@ parse1 = (s) ->
 
 commands = parseScript script
 
-# *indirectTo* is used (in eachLine) to determine what to do
-# (what continuation to call) when each line is read from input.
-# (Normally this is beginScript which starts a cycle of script
-# execution, but functions like 'N' can change that).
-indirectTo = null
-
 class Sed
   constructor: () ->
     @currentLine = 0
     @pattern = null
     @hold = ''
     @finalLine = false
+    # *indirectTo* is used (in eachLine) to determine what to do
+    # (what continuation to call) when each line is read from input.
+    # (Normally this is beginScript which starts a cycle of script
+    # execution, but functions like 'N' can change that).
+    @indirectTo = @beginScript
 
   addrMatch: (addr) ->
     if typeof addr is 'number'
@@ -163,10 +162,10 @@ class Sed
     if 'h' == cmd.verb
       @hold = @pattern
     if 'N' == cmd.verb
-      indirectTo = (line) =>
+      @indirectTo = (line) =>
         @pattern += '\n' + line
         @currentLine += 1
-        indirectTo = => @beginScript.apply @, arguments
+        @indirectTo = @beginScript
         nextCmd()
       return nextLine()
     if 'P' == cmd.verb
@@ -180,9 +179,8 @@ class Sed
 
 sed = new Sed
 
-indirectTo = -> sed.beginScript.apply sed, arguments
 eachLine = (line, cb) ->
-  return indirectTo line, cb
+  return sed.indirectTo line, cb
 
 buf = ''
 processing = false
