@@ -62,13 +62,13 @@ commands = parseScript script
 # (Normally this is beginScript which starts a cycle of script
 # execution, but functions like 'N' can change that).
 indirectTo = null
-finalLine = false
 
 class Sed
   constructor: () ->
     @currentLine = 0
     @pattern = null
     @hold = ''
+    @finalLine = false
 
   addrMatch: (addr) ->
     if typeof addr is 'number'
