@@ -62,109 +62,125 @@ commands = parseScript script
 # (Normally this is beginScript which starts a cycle of script
 # execution, but functions like 'N' can change that).
 indirectTo = null
-currentLine = 0
 finalLine = false
 pattern = null
 hold = ''
-beginScript = (line, nextLine) ->
-  if pattern is null
-    pattern = line
-  else
-    pattern += '\n' + line
-  currentLine += 1
-  # List of delayed functions to call to append stuff after the
-  # cycle output (typically 'a' and 'r' verbs).
-  appends = []
 
-  async.eachSeries commands, (cmd, nextCmd) ->
-    [execute, endRange] = evalAddr cmd
+class Sed
+  constructor: () ->
+    @currentLine = 0
 
-    if execute == cmd.positive
-      return evalFunction cmd, endRange, appends, nextCmd, nextLine
-    nextCmd()
-  , () ->
-    # Pattern space may have been deleted (EG 'c' function).
-    if not argv.n and pattern isnt null
-      process.stdout.write pattern + '\n'
-    pattern = null
-    for append in appends
-      process.stdout.write append()
-    nextLine()
+  addrMatch: (addr) ->
+    if typeof addr is 'number'
+      return @currentLine == addr
+    if addr == '$'
+      return @finalLine
 
-addrMatch = (addr) ->
-  if typeof addr is 'number'
-    return currentLine == addr
-  if addr == '$'
-    return finalLine
+  finalBuf: ->
+    '''Process the final line of input (after the 'end' event
+    has been handled).
+    '''
+    lines = buf.split '\n'
+    lines.pop()
+    if lines.length
+      @finalLine = true
+      eachLine lines[0], ->
 
-evalAddr = (cmd) ->
-  endRange = false
-  # 0 address.
-  if not cmd.addr1 and not cmd.addr2
-    execute = true
-    endRange = true
-  # One address.
-  if cmd.addr1 and not cmd.addr2
-    execute = addrMatch cmd.addr1
-    endRange = true
-  # Two address.
-  if cmd.addr1 and cmd.addr2
-    if not cmd.flipped
-      execute = false
-      if addrMatch cmd.addr1
-        execute = true
-        cmd.flipped = true
-        # There is a bit of a special case for numeric 2nd addrs
-        if typeof cmd.addr2 == 'number'
-          if cmd.addr2 <= currentLine
-            cmd.flipped = false
-            endRange = true
+  beginScript: (line, nextLine) ->
+    if pattern is null
+      pattern = line
     else
-      execute = true
-      if addrMatch cmd.addr2
-        cmd.flipped = false
-        endRange = true
-  return [execute, endRange]
-
-evalFunction = (cmd, endRange, appends, nextCmd, nextLine) ->
-  if 'a' == cmd.verb
-    appends.push -> (cmd.arg + '\n')
-  if 'c' == cmd.verb
-    pattern = null
-    if endRange
-      process.stdout.write cmd.arg + '\n'
-    return nextCmd 'cycle'
-  if 'D' == cmd.verb
-    if '\n' in pattern
-      pattern = pattern.replace /^.*?\n/, ''
-    else
-      pattern = null
-    return nextCmd 'cycle'
-  if 'G' == cmd.verb
-    pattern += '\n' + hold
-  if 'g' == cmd.verb
-    pattern = hold
-  if 'H' == cmd.verb
-    hold += '\n' + pattern
-  if 'h' == cmd.verb
-    hold = pattern
-  if 'N' == cmd.verb
-    indirectTo = (line) ->
       pattern += '\n' + line
-      currentLine += 1
-      indirectTo = beginScript
-      nextCmd()
-    return nextLine()
-  if 'P' == cmd.verb
-    if '\n' in pattern
-      process.stdout.write pattern[..pattern.indexOf '\n']
-    else
-      process.stdout.write pattern + '\n'
-  if 'p' == cmd.verb
-    process.stdout.write pattern + '\n'
-  nextCmd()
+    @currentLine += 1
+    # List of delayed functions to call to append stuff after the
+    # cycle output (typically 'a' and 'r' verbs).
+    appends = []
 
-indirectTo = beginScript
+    async.eachSeries commands, (cmd, nextCmd) =>
+      [execute, endRange] = @evalAddr cmd
+
+      if execute == cmd.positive
+        return @evalFunction cmd, endRange, appends, nextCmd, nextLine
+      nextCmd()
+    , () ->
+      # Pattern space may have been deleted (EG 'c' function).
+      if not argv.n and pattern isnt null
+        process.stdout.write pattern + '\n'
+      pattern = null
+      for append in appends
+        process.stdout.write append()
+      nextLine()
+
+  evalAddr: (cmd) ->
+    endRange = false
+    # 0 address.
+    if not cmd.addr1 and not cmd.addr2
+      execute = true
+      endRange = true
+    # One address.
+    if cmd.addr1 and not cmd.addr2
+      execute = @addrMatch cmd.addr1
+      endRange = true
+    # Two address.
+    if cmd.addr1 and cmd.addr2
+      if not cmd.flipped
+        execute = false
+        if @addrMatch cmd.addr1
+          execute = true
+          cmd.flipped = true
+          # There is a bit of a special case for numeric 2nd addrs
+          if typeof cmd.addr2 == 'number'
+            if cmd.addr2 <= @currentLine
+              cmd.flipped = false
+              endRange = true
+      else
+        execute = true
+        if @addrMatch cmd.addr2
+          cmd.flipped = false
+          endRange = true
+    return [execute, endRange]
+
+  evalFunction: (cmd, endRange, appends, nextCmd, nextLine) ->
+    if 'a' == cmd.verb
+      appends.push -> (cmd.arg + '\n')
+    if 'c' == cmd.verb
+      pattern = null
+      if endRange
+        process.stdout.write cmd.arg + '\n'
+      return nextCmd 'cycle'
+    if 'D' == cmd.verb
+      if '\n' in pattern
+        pattern = pattern.replace /^.*?\n/, ''
+      else
+        pattern = null
+      return nextCmd 'cycle'
+    if 'G' == cmd.verb
+      pattern += '\n' + hold
+    if 'g' == cmd.verb
+      pattern = hold
+    if 'H' == cmd.verb
+      hold += '\n' + pattern
+    if 'h' == cmd.verb
+      hold = pattern
+    if 'N' == cmd.verb
+      indirectTo = (line) =>
+        pattern += '\n' + line
+        @currentLine += 1
+        indirectTo = => @beginScript.apply @, arguments
+        nextCmd()
+      return nextLine()
+    if 'P' == cmd.verb
+      if '\n' in pattern
+        process.stdout.write pattern[..pattern.indexOf '\n']
+      else
+        process.stdout.write pattern + '\n'
+    if 'p' == cmd.verb
+      process.stdout.write pattern + '\n'
+    nextCmd()
+
+sed = new Sed
+
+indirectTo = -> sed.beginScript.apply sed, arguments
 eachLine = (line, cb) ->
   return indirectTo line, cb
 
@@ -186,19 +202,9 @@ process.stdin.on 'data', (data) ->
     process.stdin.resume()
   if ended
     # Must have been set during the async call.
-    finalBuf()
+    sed.finalBuf()
 
 process.stdin.on 'end', () ->
   ended = true 
   if not processing
-    finalBuf()
-
-'''Process the final line of input (after the 'end' event
-has been handled).
-'''
-finalBuf = () ->
-  lines = buf.split '\n'
-  lines.pop()
-  if lines.length
-    finalLine = true
-    eachLine lines[0], ->
+    sed.finalBuf()
