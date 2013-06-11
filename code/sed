@@ -37,7 +37,7 @@ parse1 = (s) ->
       (?:, (\d+|\$|/(?:[^\\]|\\.)*/))? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|[DGgHhNPp:])            # Command
+    ([ac]\\|[bDGgHhNPp:])           # Command
   ///g
   m = re.exec s
   if not m
@@ -57,8 +57,8 @@ parse1 = (s) ->
     cmd.arg = m[1].replace /\\[\s\S]/g, (x) -> x[1]
     s = s[argre.lastIndex..]
   # Commands that take single line arguments.
-  if cmd.verb in ':'
-    argre = /(.*)\n?/g
+  if cmd.verb in ':b'
+    argre = /[^\S\n]*(.*)\n?/g
     m = argre.exec s
     cmd.arg = m[1]
     s = s[argre.lastIndex..]
@@ -121,13 +121,13 @@ class Sed
         return @evalFunction cmd, endRange, appends, nextCmd, nextLine
       nextCmd()
 
-    cmdIndex = 0
-    script1 = (stop) ->
+    @cmdIndex = 0
+    script1 = (stop) =>
       # If *stop* is true then we abort the command loop early
       # and begin the next cycle.
-      if cmdIndex >= commands.length or stop
+      if @cmdIndex >= commands.length or stop
         return endCycle()
-      evalCommand commands[cmdIndex++], script1
+      evalCommand commands[@cmdIndex++], script1
 
     script1()
 
@@ -163,6 +163,13 @@ class Sed
   evalFunction: (cmd, endRange, appends, nextCmd, nextLine) ->
     if 'a' == cmd.verb
       appends.push -> (cmd.arg + '\n')
+    if 'b' == cmd.verb
+      index = @label[cmd.arg]
+      if index?
+        @cmdIndex = index
+      else
+        console.warn "Branch label [[#{cmd.arg}]] is missing."
+        @cmdIndex = Infinity
     if 'c' == cmd.verb
       @pattern = null
       if endRange
@@ -199,6 +206,7 @@ class Sed
     nextCmd()
 
 sed = new Sed
+sed.label = label
 
 eachLine = (line, cb) ->
   return sed.indirectTo line, cb
