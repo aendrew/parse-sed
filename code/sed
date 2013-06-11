@@ -95,13 +95,7 @@ class Sed
     # cycle output (typically 'a' and 'r' verbs).
     appends = []
 
-    async.eachSeries commands, (cmd, nextCmd) =>
-      [execute, endRange] = @evalAddr cmd
-
-      if execute == cmd.positive
-        return @evalFunction cmd, endRange, appends, nextCmd, nextLine
-      nextCmd()
-    , () =>
+    endCycle = () =>
       # Pattern space may have been deleted (EG 'c' function).
       if not argv.n and @pattern isnt null
         process.stdout.write @pattern + '\n'
@@ -109,6 +103,23 @@ class Sed
       for append in appends
         process.stdout.write append()
       nextLine()
+
+    evalCommand = (cmd, nextCmd) =>
+      [execute, endRange] = @evalAddr cmd
+
+      if execute == cmd.positive
+        return @evalFunction cmd, endRange, appends, nextCmd, nextLine
+      nextCmd()
+
+    cmdIndex = 0
+    script1 = (stop) ->
+      # If *stop* is true then we abort the command loop early
+      # and begin the next cycle.
+      if cmdIndex >= commands.length or stop
+        return endCycle()
+      evalCommand commands[cmdIndex++], script1
+
+    script1()
 
   evalAddr: (cmd) ->
     endRange = false
