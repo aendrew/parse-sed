@@ -1,0 +1,13 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+# Simple context address
+res=$(printf '%s\n' 1 2 3 | sed -n '/2/p')
+case $res in
+  ('2') ;;
+  (*) exit 9 ;;
+esac
+
+printf '%s passed\n' "$0"

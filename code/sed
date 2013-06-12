@@ -16,6 +16,21 @@ intify = (s) ->
     return 0|x
   return s
 
+# Convert string to address, which is either '$', a number, or a
+# RegExp instance.
+asAddr = (s) ->
+  if s == '$'
+    return s
+  if s is undefined
+    return x
+  x = intify s
+  if typeof x == 'number'
+    return x
+  # :todo: handle \cfooc
+  if x[0] = '/'
+    return RegExp x[1..-2]
+
+
 parseScript = (s) ->
   label = {}
   cmds = []
@@ -43,7 +58,7 @@ parse1 = (s) ->
   if not m
     return [null, null]
   cmd = {}
-  cmd.addr1 = intify m[1]
+  cmd.addr1 = asAddr m[1]
   cmd.addr2 = intify m[2]
   cmd.positive = not m[3]
   cmd.verb = m[4][0]
@@ -84,6 +99,8 @@ class Sed
       return @currentLine == addr
     if addr == '$'
       return @finalLine
+    if addr instanceof RegExp
+      return addr.test @pattern
 
   finalBuf: ->
     '''Process the final line of input (after the 'end' event
