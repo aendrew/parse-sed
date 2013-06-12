@@ -1,0 +1,17 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+res=$(printf '%s\n' 1 2 3 | sed -n ':foo
+N;p;2b foo')
+case $res in
+  ('1
+2
+1
+2
+3') ;;
+  (*) exit 9 ;;
+esac
+
+printf '%s passed\n' "$0"
