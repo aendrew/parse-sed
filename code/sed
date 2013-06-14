@@ -248,7 +248,9 @@ class Sed
         @pattern = @pattern.slice(0, m.index) +
           cmd.replacement +
           @pattern.slice(cmd.re.lastIndex)
-        # :todo: flags
+        if 'p' in cmd.flags
+          process.stdout.write @pattern + '\n'
+        # :todo: more flags
     nextCmd()
 
 sed = new Sed

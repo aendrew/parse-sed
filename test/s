@@ -18,4 +18,10 @@ case $res in
   (*) exit 8 ;;
 esac
 
+res=$(printf '%s\n' 1 2 | sed -n 's/2/two/p')
+case $res in
+  ('two') ;;
+  (*) exit 7 ;;
+esac
+
 printf '%s passed\n' "$0"
