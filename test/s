@@ -11,4 +11,11 @@ two
   (*) exit 9 ;;
 esac
 
+res=$(printf '%s\n' 1 2 | sed 's/$/,/')
+case $res in
+  ('1,
+2,') ;;
+  (*) exit 8 ;;
+esac
+
 printf '%s passed\n' "$0"
