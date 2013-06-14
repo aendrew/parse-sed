@@ -10,7 +10,8 @@ Current status:
  * no file arguments
  * Only a few verbs are implemented:
  * * a, c, D, G, g, H, h, N, p
- * The only addresses implemented are numeric and `$`
+ * * s is partially implemented
+ * numbers and `$` are implemented for addresses; context addresses are partially implemented.
 
 # Tests
 
