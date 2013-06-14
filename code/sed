@@ -48,11 +48,13 @@ parse1 = (s) ->
   # The REs for addrs are not very right.
   re = ///
     (?:
-      (\d+|\$|/(?:[^\\]|\\.)*/)        # Addr1
-      (?:, (\d+|\$|/(?:[^\\]|\\.)*/))? # Optional Addr2
+      ( \d+ | \$ | /(?:[^\\]|\\.)*/ )   # Addr
+      (?:,
+      ( \d +| \$ | /(?:[^\\]|\\.)*/ )
+      )? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|[bDGgHhNPp:])           # Command
+    ([ac]\\|[bDGgHhNPps:])          # Command
   ///g
   m = re.exec s
   if not m
@@ -76,6 +78,24 @@ parse1 = (s) ->
     argre = /[^\S\n]*(.*)\n?/g
     m = argre.exec s
     cmd.arg = m[1]
+    s = s[argre.lastIndex..]
+  # s function has a special argument form.
+  if cmd.verb == 's'
+    argre = ///
+      ([^\\\n]) # delimiter, usually /
+      ((?:[^\\]|\\.)*) # BRE
+      \1
+      ((?:[^\\]|\\.)*) # replacement
+      \1
+      ([gnpw]*) (?:\s+(.+))? # flags
+    ///g
+    m = argre.exec s
+    cmd.arg = m[1..5]
+    cmd.delimiter = m[1]
+    cmd.re = RegExp m[2], 'g'
+    cmd.replacement = m[3]
+    cmd.flags = m[4]
+    cmd.file = m[5]
     s = s[argre.lastIndex..]
     
   return [s, cmd]
@@ -220,6 +240,15 @@ class Sed
         process.stdout.write @pattern + '\n'
     if 'p' == cmd.verb
       process.stdout.write @pattern + '\n'
+    if 's' == cmd.verb
+      m = cmd.re.exec @pattern
+      if m
+        @substituted = true
+        # :todo: interpolations in replacement.
+        @pattern = @pattern.slice(0, m.index) +
+          cmd.replacement +
+          @pattern.slice(cmd.re.lastIndex)
+        # :todo: flags
     nextCmd()
 
 sed = new Sed

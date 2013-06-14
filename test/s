@@ -1,0 +1,14 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+res=$(printf '%s\n' 1 2 3 | sed 's/2/two/')
+case $res in
+  ('1
+two
+3') ;;
+  (*) exit 9 ;;
+esac
+
+printf '%s passed\n' "$0"
