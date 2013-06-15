@@ -5,12 +5,21 @@ alias sed="$SED"
 
 # Test the replacement string features.
 
+# Test & and escape forms.
 res=$(printf '%s\n' 1 2 3 | sed 's/[23]/\&&\\&/')
 case $res in
   ('1
 &2\2
 &3\3') ;;
   (*) exit 9 ;;
+esac
+
+# Test numeric backreferences.
+res=$(printf '%s\n' 12 34 | sed 's/\(.\)\(.\)/\2\\\1/')
+case $res in
+  ('2\1
+4\3') ;;
+  (*) exit 8 ;;
 esac
 
 printf '%s passed\n' "$0"

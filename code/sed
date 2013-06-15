@@ -252,9 +252,11 @@ class Sed
             return m[0]
           if particle[0] != '\\'
             return particle
+          # particle[0] is '\\'
           if particle[1] in '&\\'
             return particle[1]
-          # :todo: \1
+          if /[1-9]/.test particle[1]
+            return m[particle[1]]
         @pattern = @pattern.slice(0, m.index) +
           repl +
           @pattern.slice(cmd.re.lastIndex)
