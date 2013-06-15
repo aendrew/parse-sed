@@ -247,13 +247,14 @@ class Sed
       m = cmd.re.exec @pattern
       if m
         @substituted = true
-        # :todo: interpolations in replacement.
         repl = cmd.replacement.replace /\\.|[^\\]/g, (particle) ->
           if particle == '&'
             return m[0]
           if particle[0] != '\\'
             return particle
-          # :todo: \\ \1 \&
+          if particle[1] in '&\\'
+            return particle[1]
+          # :todo: \1
         @pattern = @pattern.slice(0, m.index) +
           repl +
           @pattern.slice(cmd.re.lastIndex)

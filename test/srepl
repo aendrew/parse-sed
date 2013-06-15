@@ -5,11 +5,11 @@ alias sed="$SED"
 
 # Test the replacement string features.
 
-res=$(printf '%s\n' 1 2 3 | sed 's/[23]/&&/')
+res=$(printf '%s\n' 1 2 3 | sed 's/[23]/\&&/')
 case $res in
   ('1
-22
-33') ;;
+&2
+&3') ;;
   (*) exit 9 ;;
 esac
 
