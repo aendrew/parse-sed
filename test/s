@@ -3,6 +3,7 @@
 
 alias sed="$SED"
 
+# Simple case.
 res=$(printf '%s\n' 1 2 3 | sed 's/2/two/')
 case $res in
   ('1
@@ -11,6 +12,7 @@ two
   (*) exit 9 ;;
 esac
 
+# Simple BRE.
 res=$(printf '%s\n' 1 2 | sed 's/$/,/')
 case $res in
   ('1,
@@ -18,6 +20,7 @@ case $res in
   (*) exit 8 ;;
 esac
 
+# p flag.
 res=$(printf '%s\n' 1 2 | sed -n 's/2/two/p')
 case $res in
   ('two') ;;
