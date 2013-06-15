@@ -243,12 +243,19 @@ class Sed
     if 'p' == cmd.verb
       process.stdout.write @pattern + '\n'
     if 's' == cmd.verb
+      cmd.re.lastIndex = 0
       m = cmd.re.exec @pattern
       if m
         @substituted = true
         # :todo: interpolations in replacement.
+        repl = cmd.replacement.replace /\\.|[^\\]/g, (particle) ->
+          if particle == '&'
+            return m[0]
+          if particle[0] != '\\'
+            return particle
+          # :todo: \\ \1 \&
         @pattern = @pattern.slice(0, m.index) +
-          cmd.replacement +
+          repl +
           @pattern.slice(cmd.re.lastIndex)
         if 'p' in cmd.flags
           process.stdout.write @pattern + '\n'
