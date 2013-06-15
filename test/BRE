@@ -1,0 +1,14 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+# | is not a special character in POSIX BRE so check
+# it can be used as normal.
+res=$(printf 'f|b\n' | sed 's/|/a/')
+case $res in
+  ('fab') ;;
+  (*) exit 9 ;;
+esac
+
+printf '%s passed\n' "$0"

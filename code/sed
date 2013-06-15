@@ -2,6 +2,8 @@
 
 async = require 'async'
 optimist = require 'optimist'
+posixbre = require 'posixbre'
+
 argv = optimist.posix().boolean('n').argv
 
 script = ''
@@ -92,7 +94,7 @@ parse1 = (s) ->
     m = argre.exec s
     cmd.arg = m[1..5]
     cmd.delimiter = m[1]
-    cmd.re = RegExp m[2], 'g'
+    cmd.re = RegExp posixbre.asRegExp(m[2]), 'g'
     cmd.replacement = m[3]
     cmd.flags = m[4]
     cmd.file = m[5]
