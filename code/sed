@@ -89,7 +89,7 @@ parse1 = (s) ->
       \1
       ((?:[^\\]|\\.)*) # replacement
       \1
-      ([gnpw]*) (?:\s+(.+))? # flags
+      ([\dgnpw]*) (?:\s+(.+))? # flags
     ///g
     m = argre.exec s
     cmd.arg = m[1..5]
@@ -97,6 +97,11 @@ parse1 = (s) ->
     cmd.re = RegExp posixbre.asRegExp(m[2]), 'g'
     cmd.replacement = m[3]
     cmd.flags = m[4]
+    digits = cmd.flags.match /\d+/
+    if digits
+      cmd.nth = +digits
+    else
+      cmd.nth = +not('g' in cmd.flags)
     cmd.file = m[5]
     s = s[argre.lastIndex..]
     
@@ -244,25 +249,33 @@ class Sed
       process.stdout.write @pattern + '\n'
     if 's' == cmd.verb
       cmd.re.lastIndex = 0
-      m = cmd.re.exec @pattern
-      if m
-        @substituted = true
-        repl = cmd.replacement.replace /\\.|[^\\]/g, (particle) ->
-          if particle == '&'
-            return m[0]
-          if particle[0] != '\\'
-            return particle
-          # particle[0] is '\\'
-          if particle[1] in '&\\'
-            return particle[1]
-          if /[1-9]/.test particle[1]
-            return m[particle[1]]
-        @pattern = @pattern.slice(0, m.index) +
-          repl +
-          @pattern.slice(cmd.re.lastIndex)
-        if 'p' in cmd.flags
-          process.stdout.write @pattern + '\n'
-        # :todo: more flags
+      matchCount = 0
+      substituted = false
+      while true
+        m = cmd.re.exec @pattern
+        if not m
+          break
+        matchCount += 1
+        if 'g' in cmd.flags or cmd.nth == matchCount
+          substituted = @substituted = true
+          repl = cmd.replacement.replace /\\.|[^\\]/g, (particle) ->
+            if particle == '&'
+              return m[0]
+            if particle[0] != '\\'
+              return particle
+            # particle[0] is '\\'
+            if particle[1] in '&\\'
+              return particle[1]
+            if /[1-9]/.test particle[1]
+              return m[particle[1]]
+          @pattern = @pattern.slice(0, m.index) +
+            repl +
+            @pattern.slice(cmd.re.lastIndex)
+        if cmd.nth and matchCount >= cmd.nth
+          break
+      if 'p' in cmd.flags and substituted
+        process.stdout.write @pattern + '\n'
+
     nextCmd()
 
 sed = new Sed

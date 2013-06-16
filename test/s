@@ -27,4 +27,20 @@ case $res in
   (*) exit 7 ;;
 esac
 
+# Numeric flag.
+# From POSIX spec: "The command s/a/A/2047 should be able to
+#   substitute the 2047th occurrence of a on a line."
+a=aaaa
+for i in 1 2 3 4 5 6 7 8 9
+do
+  a=$a$a
+done
+res=$(printf '%s\n' $a | sed 's/a/A/2047' | tr 'A' '
+' | while read -r l; do echo $l | wc -c; done)
+case $res in
+  ('2047
+2') ;;
+  (*) exit 6 ;;
+esac
+
 printf '%s passed\n' "$0"
