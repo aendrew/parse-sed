@@ -3,21 +3,14 @@
 
 alias sed="$SED"
 
-# Simple case.
-res=$(printf '%s\n' 1 2 3 | sed 's/2/two/')
+# Simple case and simple BRE.
+res=$(printf '%s\n' 1 2 3 | sed 's/2/two/
+s/1$/,/')
 case $res in
-  ('1
+  (',
 two
 3') ;;
   (*) exit 9 ;;
-esac
-
-# Simple BRE.
-res=$(printf '%s\n' 1 2 | sed 's/$/,/')
-case $res in
-  ('1,
-2,') ;;
-  (*) exit 8 ;;
 esac
 
 # p flag.

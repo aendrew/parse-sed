@@ -85,11 +85,11 @@ parse1 = (s) ->
   if cmd.verb == 's'
     argre = ///
       ([^\\\n]) # delimiter, usually /
-      ((?:[^\\]|\\.)*) # BRE
+      ((?:[^\\\n]|\\.)*) # BRE
       \1
-      ((?:[^\\]|\\.)*) # replacement
+      ((?:[^\\\n]|\\.)*) # replacement
       \1
-      ([\dgnpw]*) (?:\s+(.+))? # flags
+      ([\dgnpw]*) (?:[^\S\n]+(.+))? # flags
     ///g
     m = argre.exec s
     cmd.arg = m[1..5]
