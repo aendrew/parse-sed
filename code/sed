@@ -251,6 +251,8 @@ class Sed
       cmd.re.lastIndex = 0
       matchCount = 0
       substituted = false
+      result = []
+      lastIndex = 0
       while true
         m = cmd.re.exec @pattern
         if not m
@@ -268,13 +270,18 @@ class Sed
               return particle[1]
             if /[1-9]/.test particle[1]
               return m[particle[1]]
-          @pattern = @pattern.slice(0, m.index) +
-            repl +
-            @pattern.slice(cmd.re.lastIndex)
+          result = result.concat [
+            @pattern.slice(lastIndex, m.index)
+            repl
+          ]
+          lastIndex = cmd.re.lastIndex
         if cmd.nth and matchCount >= cmd.nth
           break
-      if 'p' in cmd.flags and substituted
-        process.stdout.write @pattern + '\n'
+      if substituted
+        result.push @pattern.slice lastIndex
+        @pattern = result.join ''
+        if 'p' in cmd.flags
+          process.stdout.write @pattern + '\n'
 
     nextCmd()
 
