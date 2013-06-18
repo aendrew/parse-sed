@@ -275,6 +275,9 @@ class Sed
             repl
           ]
           lastIndex = cmd.re.lastIndex
+          if m.index == cmd.re.lastIndex
+            # Zero-width match.
+            cmd.re.lastIndex += 1
         if cmd.nth and matchCount >= cmd.nth
           break
       if substituted

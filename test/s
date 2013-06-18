@@ -14,9 +14,10 @@ two
 esac
 
 # g flag.
-res=$(printf 'foo\n' | sed s/o//g)
+res=$(printf 'foo\n' | sed 's/o//g
+s/z*/x/g')
 case $res in
-  ('f') ;;
+  ('xfx') ;;
   (*) exit 8 ;;
 esac
 
