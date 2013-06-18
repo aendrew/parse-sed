@@ -3,7 +3,8 @@
 
 printf '%s\n' ${@:-$(cat)} | sed -n '
 s/$/,/
-1{h;d}
+1h
+1d
 :loop
   /1,/b dec
 :shift
