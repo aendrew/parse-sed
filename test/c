@@ -27,5 +27,3 @@ after
 3') ;;
   (*) exit 8 ;;
 esac
-
-printf '%s passed\n' "$0"

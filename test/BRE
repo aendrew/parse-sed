@@ -10,5 +10,3 @@ case $res in
   ('fab') ;;
   (*) exit 9 ;;
 esac
-
-printf '%s passed\n' "$0"

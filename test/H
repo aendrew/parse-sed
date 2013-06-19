@@ -19,5 +19,3 @@ case $res in
 1') ;;
   (*) exit 8 ;;
 esac
-
-printf '%s passed\n' "$0"

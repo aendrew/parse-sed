@@ -1,8 +1,5 @@
 #!/bin/sh
 : ${SED?}
-printf '%s ' "$0"
-trap "printf 'failed\n'" EXIT
-
 
 alias sed="$SED"
 
@@ -46,6 +43,3 @@ case $res in
 2') ;;
   (*) exit 6 ;;
 esac
-
-printf 'passed\n'
-trap '' EXIT

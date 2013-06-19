@@ -9,5 +9,3 @@ case $res in
 4') ;;
   (*) exit 9 ;;
 esac
-
-printf '%s passed\n' "$0"

@@ -23,4 +23,3 @@ bar
 baz') ;;
   (*) exit 8 ;;
 esac
-printf '%s passed\n' "$0"

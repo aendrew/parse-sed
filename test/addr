@@ -36,5 +36,3 @@ bar
 line 4') ;;
   (*) exit 7 ;;
 esac
-
-printf '%s passed\n' "$0"
