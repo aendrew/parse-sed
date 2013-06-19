@@ -4,7 +4,7 @@
   "description": "Unix sed for node.js",
   "main": "code/sed",
   "scripts": {
-    "test": "SED=code/sed test/all"
+    "test": "SED=$(pwd)/code/sed node_modules/.bin/urchin test"
   },
   "repository": "",
   "keywords": [
@@ -16,5 +16,8 @@
   "dependencies": {
     "async": "~0.2.8",
     "posixbre": "0.0.0"
+  },
+  "devDependencies": {
+    "urchin": "0.0.1"
   }
 }
