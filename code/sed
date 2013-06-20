@@ -56,7 +56,7 @@ parse1 = (s) ->
       )? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|[bDdGgHhNPpsx:])        # Command
+    ([ac]\\|[bDdGgHhNPpqsx:])       # Command
   ///g
   m = re.exec s
   if not m
@@ -156,6 +156,9 @@ class Sed
       @pattern = null
       for append in appends
         process.stdout.write append()
+      if @quitter
+        # :todo: What should the exit status be?
+        process.exit()
       nextLine()
 
     evalCommand = (cmd, nextCmd) =>
@@ -250,6 +253,9 @@ class Sed
         process.stdout.write @pattern + '\n'
     if 'p' == cmd.verb
       process.stdout.write @pattern + '\n'
+    if 'q' == cmd.verb
+      @quitter = true
+      return nextCmd 'cycle'
     if 's' == cmd.verb
       cmd.re.lastIndex = 0
       matchCount = 0
