@@ -56,7 +56,7 @@ parse1 = (s) ->
       )? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|[bDGgHhNPps:])          # Command
+    ([ac]\\|[bDGgHhNPpsx:])         # Command
   ///g
   m = re.exec s
   if not m
@@ -285,6 +285,8 @@ class Sed
         @pattern = result.join ''
         if 'p' in cmd.flags
           process.stdout.write @pattern + '\n'
+    if 'x' == cmd.verb
+      [@pattern, @hold] = [@hold, @pattern]
 
     nextCmd()
 
