@@ -15,5 +15,6 @@ Current status:
 
 # Tests
 
+    npm install # to install urchin
     npm test
 
