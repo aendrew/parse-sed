@@ -56,7 +56,7 @@ parse1 = (s) ->
       )? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|[bDGgHhNPpsx:])         # Command
+    ([ac]\\|[bDdGgHhNPpsx:])        # Command
   ///g
   m = re.exec s
   if not m
@@ -224,6 +224,9 @@ class Sed
         @pattern = @pattern.replace /^.*?\n/, ''
       else
         @pattern = null
+      return nextCmd 'cycle'
+    if 'd' == cmd.verb
+      @pattern = null
       return nextCmd 'cycle'
     if 'G' == cmd.verb
       @pattern += '\n' + @hold
