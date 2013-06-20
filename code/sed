@@ -45,7 +45,7 @@ parseScript = (s) ->
       label[cmd.arg] = cmds.length
   return [cmds, label]
 # Parse the next command from string *s* returning a pair
-# *s*, *cmd*
+# [*s*, *cmd*]
 parse1 = (s) ->
   # The REs for addrs are not very right.
   re = ///
