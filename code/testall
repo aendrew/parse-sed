@@ -4,12 +4,12 @@
 
 for t in test/*
 do
-  outcome=
+  outcome=pass
   case $t in
     (test/all) ;;
     (*) printf '%s ' "$t"
-      "$t" && outcome=pass
-      printf '%s\n' "${outcome:-fail: exit status $?}"
+      "$t" || outcome="fail: exit status $?"
+      printf '%s\n' "$outcome"
       ;;
   esac
 done
