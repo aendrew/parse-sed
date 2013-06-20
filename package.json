@@ -6,7 +6,10 @@
   "scripts": {
     "test": "SED=${SED:-$(pwd)/code/sed} node_modules/.bin/urchin test"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/drj11/sed.js.git"
+  },
   "keywords": [
     "sed"
   ],
@@ -19,5 +22,9 @@
   },
   "devDependencies": {
     "urchin": "0.0.1"
+  },
+  "gitHead": "0be33bb77b7504cacfd5535a37369dffbc8de34b",
+  "directories": {
+    "test": "test"
   }
 }
