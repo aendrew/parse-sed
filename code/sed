@@ -50,9 +50,9 @@ parse1 = (s) ->
   # The REs for addrs are not very right.
   re = ///
     (?:
-      ( \d+ | \$ | /(?:[^\\]|\\.)*/ )   # Addr
+      ( \d+ | \$ | /(?:[^\\\n]|\\.)*/ ) # Addr
       (?:,
-      ( \d +| \$ | /(?:[^\\]|\\.)*/ )
+      ( \d +| \$ | /(?:[^\\\n]|\\.)*/ )
       )? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
