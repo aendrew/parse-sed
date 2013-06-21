@@ -54,3 +54,14 @@ case $res in
 2233') ;;
   (*) exit 5 ;;
 esac
+
+# Should work with any separator.
+res=$(printf '%s\n' 1 2 | sed 's 1 a 
+s;a;b;
+s&b&c&
+s,c,d,')
+case $res in
+  ('d
+2') ;;
+  (*) exit 4 ;;
+esac
