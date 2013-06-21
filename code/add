@@ -1,6 +1,8 @@
 #!/bin/sh
 # Add binary numbers in sed
 
+alias sed=${SED:-sed}
+
 printf '%s\n' ${@:-$(cat)} | sed -n '
 s/$/,/
 1h
