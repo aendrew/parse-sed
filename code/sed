@@ -278,7 +278,7 @@ class Sed
             if particle[1] in '&\\'
               return particle[1]
             if /[1-9]/.test particle[1]
-              return m[particle[1]]
+              return m[particle[1]] or ''
           result = result.concat [
             @pattern.slice(lastIndex, m.index)
             repl

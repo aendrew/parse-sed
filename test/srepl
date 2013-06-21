@@ -21,3 +21,12 @@ case $res in
 4\3') ;;
   (*) exit 8 ;;
 esac
+
+# Unmatched backreferences should be empty.
+# And also, \(group\)* should match empty string.
+# http://sed.sourceforge.net/sedfaq7.html#s7.13
+res=$(printf '%s\n' foo | sed 's/f\(NO-MATCH\)*/g\1/')
+case $res in
+  ('goo') ;;
+  (*) exit 7 ;;
+esac
