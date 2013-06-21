@@ -9,8 +9,8 @@ Current status:
  * `-n` option implemented
  * no file arguments
  * Only a few verbs are implemented:
- * * a, c, D, G, g, H, h, N, p
- * * s is partially implemented
+ ** : a, b, c, D, d, G, g, H, h, N, p, q, x
+ ** s is partially implemented
  * numbers and `$` are implemented for addresses; context addresses are partially implemented.
 
 # Tests
