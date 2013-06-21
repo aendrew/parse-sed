@@ -294,6 +294,7 @@ class Sed
     if 't' == cmd.verb
       if @substituted
         @branch cmd.arg
+      @substituted = false
     if 'x' == cmd.verb
       [@pattern, @hold] = [@hold, @pattern]
     nextCmd()

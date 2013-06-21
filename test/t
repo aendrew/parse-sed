@@ -12,3 +12,16 @@ case $res in
 3') ;;
   (*) exit 9 ;;
 esac
+
+res=$(printf '%s\n' 2 3 | sed -n 's/2/foo/
+t skip
+p
+:skip
+p
+t skipmore
+q
+:skipmore')
+case $res in
+  ('foo') ;;
+  (*) exit 8 ;;
+esac
