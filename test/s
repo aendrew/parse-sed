@@ -43,3 +43,14 @@ case $res in
 2') ;;
   (*) exit 6 ;;
 esac
+
+# Combinations of flags.
+res=$(printf '%s\n' 1 2 | sed -n 's/2/&&/
+s/2/3/2p
+s/./&&/pg')
+case $res in
+  ('11
+23
+2233') ;;
+  (*) exit 5 ;;
+esac
