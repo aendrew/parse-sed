@@ -108,6 +108,11 @@ parse1 = (s) ->
   return [s, cmd]
 
 [commands,label] = parseScript script
+if /parse/.test process.env.SED_DEBUG
+  console.warn "> commands"
+  console.warn commands
+  console.warn "> labels"
+  console.warn label
 
 class Sed
   constructor: () ->
@@ -304,6 +309,8 @@ class Sed
 
   branch: (label) ->
     """Implements b and t commands."""
+    if /branch/.test process.env.SED_DEBUG
+      console.warn "> branch to #{label}"
     index = @label[label]
     if index?
       @cmdIndex = index
