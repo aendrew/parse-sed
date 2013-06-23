@@ -13,3 +13,12 @@ case $res in
 3') ;;
   (*) exit 9 ;;
 esac
+
+# A b with no label should branch to the end
+res=$(printf '%s\n' 1 2 3 | sed -n '2b
+p')
+case $res in
+  ('1
+3') ;;
+  (*) exit 8 ;;
+esac
