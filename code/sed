@@ -313,13 +313,16 @@ class Sed
   branch: (label) ->
     """Implements b and t commands."""
     if /branch/.test process.env.SED_DEBUG
-      console.warn "> branch to #{label}"
-    index = @label[label]
-    if index?
-      @cmdIndex = index
-    else
-      console.warn "Branch label [[#{label}]] is missing."
+      console.warn "> branch to [[#{label}]]"
+    if not label
       @cmdIndex = Infinity
+    else
+      index = @label[label]
+      if index?
+        @cmdIndex = index
+      else
+        console.warn "Branch label [[#{label}]] is missing."
+        @cmdIndex = Infinity
 
 sed = new Sed
 sed.label = label

@@ -13,6 +13,7 @@ case $res in
   (*) exit 9 ;;
 esac
 
+# A t command should reset the flag.
 res=$(printf '%s\n' 2 3 | sed -n 's/2/foo/
 t skip
 p
@@ -24,4 +25,15 @@ q
 case $res in
   ('foo') ;;
   (*) exit 8 ;;
+esac
+
+# A t with no label should branch to script end.
+res=$(printf '%s\n' 1 2 3 | sed 's/2/foo/
+t
+s;^;+;')
+case $res in
+  ('+1
+foo
++3') ;;
+  (*) exit 7 ;;
 esac
