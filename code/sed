@@ -30,7 +30,7 @@ asAddr = (s) ->
     return x
   # :todo: handle \cfooc
   if x[0] = '/'
-    return RegExp x[1..-2]
+    return RegExp posixbre.asRegExp x[1..-2]
 
 
 parseScript = (s) ->

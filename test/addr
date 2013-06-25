@@ -36,3 +36,10 @@ bar
 line 4') ;;
   (*) exit 7 ;;
 esac
+
+# Backrefs should work. https://github.com/drj11/sed.js/issues/1
+res=$(printf '%s\n' 1 22 | sed -n '/\(.\)\1/p')
+case $res in
+  ('22') ;;
+  (*) exit 6
+esac
