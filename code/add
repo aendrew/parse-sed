@@ -17,8 +17,8 @@ s/,/;/
   # Decrement digit before comma, increment number with semicolon.
   s/,/,0123456789,/;s/\(.\),[^,]*\(.\)\1[^,]*,/\2,/
   s/;/;:/
-  s/^;/0;/
   :carry
+    s/^;/0;/
     s/;/;0123456789a;/;s/\(.\);[^;]*\1\(.\)[^;]*;/\2/
     s/a/;0/
     t carry
