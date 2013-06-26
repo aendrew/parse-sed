@@ -87,9 +87,9 @@ parse1 = (s) ->
   if cmd.verb == 's'
     argre = ///
       ([^\\\n]) # delimiter, usually /
-      ((?:[^\\\n]|\\.)*) # BRE
+      ((?:(?!\1)[^\\\n]|\\.)*) # BRE
       \1
-      ((?:[^\\\n]|\\.)*) # replacement
+      ((?:(?!\1)[^\\\n]|\\.)*) # replacement
       \1
       ([\dgnpw]*) (?:[^\S\n]+(.+))? # flags
     ///g

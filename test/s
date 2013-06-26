@@ -65,3 +65,10 @@ case $res in
 2') ;;
   (*) exit 4 ;;
 esac
+
+# Should allow multiple commands on one line.
+res=$(printf '1\n' | sed 's/1/2/;s/2/3/')
+case $res in
+  ('3') ;;
+  (*) exit 3 ;;
+esac
