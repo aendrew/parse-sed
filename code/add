@@ -1,0 +1,31 @@
+#!/bin/sh
+# Adds two decimal numbers
+
+alias sed=${SED:-sed}
+
+printf '%s\n' "${*-$(cat)}" | sed -n '
+s/[0-9]\{1,\}/&,/g
+s/,/;/
+:loop
+  /[1-9],/b dec
+:shift
+  / ,/b quit
+  /^;/b quit
+  s/\(.\)\([,;]\)/\2\1/g
+  b loop
+:dec
+  # Decrement digit before comma, increment number with semicolon.
+  s/,/,0123456789,/;s/\(.\),[^,]*\(.\)\1[^,]*,/\2,/
+  s/;/;:/
+  s/^;/0;/
+  :carry
+    s/;/;0123456789a;/;s/\(.\);[^;]*\1\(.\)[^;]*;/\2/
+    s/a/;0/
+    t carry
+  s/:/;/
+  b loop
+
+:quit
+  s/ *,.*//
+  s/;//
+p'
