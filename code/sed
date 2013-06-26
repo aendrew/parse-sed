@@ -56,7 +56,7 @@ parse1 = (s) ->
       )? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|[bDdGgHhNPpqstx:])      # Command
+    ([ac]\\|[bDdGgHhNPpqstx#:])     # Command
   ///g
   m = re.exec s
   if not m
@@ -69,6 +69,9 @@ parse1 = (s) ->
   cmd.positive = not m[3]
   cmd.verb = m[4][0]
   s = s[re.lastIndex..]
+  # Comments
+  if cmd.verb in '#'
+    s = s.replace /^.*?(\n|$)/, ''
   # Commands that take 'a\' style arguments.
   if cmd.verb in 'ac'
     # Delete through newline.

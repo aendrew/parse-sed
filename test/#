@@ -1,0 +1,12 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+# Comments are allowed
+res=$(printf '%s\n' 1 2 | sed 's/2/two/;#s/1/one/')
+case $res in
+  ('1
+two') ;;
+  (*) exit 9 ;;
+esac
