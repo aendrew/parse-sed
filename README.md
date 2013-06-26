@@ -8,9 +8,9 @@ Current status:
  * Single script argument
  * `-n` option implemented
  * no file arguments
- * Only a few verbs are implemented:
-   * :, a, b, c, D, d, G, g, H, h, N, p, q, t, x
-   * s is partially implemented
+ * Only some verbs are implemented:
+   * :, #, a, b, c, D, d, G, g, H, h, N, p, q, t, x
+   * s is mostly implemented (the w flag isn't)
  * numbers and `$` are implemented for addresses; context addresses are partially implemented.
 
 # Tests
