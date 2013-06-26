@@ -2,7 +2,8 @@
 
 : ${SED?}
 
-for t in test/*
+dir=${1-test}
+for t in $dir/*
 do
   outcome=pass
   case $t in
