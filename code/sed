@@ -56,7 +56,7 @@ parse1 = (s) ->
       )? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([ac]\\|[bDdGgHhNPpqstx#:])     # Command
+    ([ac]\\|[bDdGgHhNnPpqstx#:])    # Command
   ///g
   m = re.exec s
   if not m
@@ -246,6 +246,12 @@ class Sed
         @indirectTo = @beginScript
         nextCmd()
       return nextLine()
+    if 'n' == cmd.verb
+      @indirectTo = (line) =>
+        @inputLine line
+        @indirectTo = @beginScript
+        nextCmd()
+      return nextCmd 'cycle'
     if 'P' == cmd.verb
       if '\n' in @pattern
         process.stdout.write @pattern[..@pattern.indexOf '\n']
