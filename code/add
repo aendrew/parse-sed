@@ -15,6 +15,7 @@ s/,/;/
   b loop
 :dec
   # Decrement digit before comma, increment number with semicolon.
+  # Ideas for implementation from http://lvogel.free.fr/sed.htm
   s/,/,0123456789,/;s/\(.\),[^,]*\(.\)\1[^,]*,/\2,/
   s/;/;:/
   :carry
