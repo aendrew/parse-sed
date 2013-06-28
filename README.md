@@ -4,14 +4,20 @@ Unix sed for node.js
 
 Intended to be POSIX compliant (but not yet).
 
-Current status:
- * Single script argument
- * `-n` option implemented
- * no file arguments
- * Only some verbs are implemented:
-   * :, #, a, b, c, D, d, G, g, H, h, i, N, n, p, q, t, x
-   * s is mostly implemented (the w flag isn't)
- * numbers and `$` are implemented for addresses; context addresses are partially implemented.
+# Current implementation status
+
+Implemented
+ * `-e` and `-n` options
+ * The verbs :, #, a, b, c, D, d, G, g, H, h, i, N, n, p, q, t, x
+ * The verb s is mostly implemented (w flag is not)
+ * Addresses: numeric, `$`, context address are partially implemented
+
+Not Yet Implemented
+ * file arguments
+ * `-f` option
+ * the w flag from the s verb
+ * context addresses that start with a blackslash
+ * the verbs {, l, r, w, y, =
 
 # Tests
 
