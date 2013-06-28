@@ -2,7 +2,7 @@
 : ${SED?}
 alias sed="$SED"
 
-# from that really cool sed website
+# from http://sed.sourceforge.net/grabbag/scripts/cat-s.sed
 res=$(printf '%s\n' '' 1 2 '' 3 '' '' 4 | sed -n '
 # delete all blanks
 /./!d
