@@ -18,7 +18,8 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "async": "~0.2.8",
-    "posixbre": "0.0.0"
+    "posixbre": "0.0.0",
+    "underscore": "~1.4.4"
   },
   "devDependencies": {
     "urchin": "~0.0.1"

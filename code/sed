@@ -3,6 +3,7 @@
 fs = require 'fs'
 async = require 'async'
 posixbre = require 'posixbre'
+_ = require 'underscore'
 
 # Process arguments and collect script.
 script = ''
@@ -35,6 +36,12 @@ while process.argv.length
     process.exit 4
 if '' == script
   script = process.argv.shift()
+
+if process.argv.length
+  input = _.map process.argv, (name) ->
+    -> fs.createReadStream name
+else
+  input = [ -> process.stdin ]
 
 # If *s* (a string) has the form of a number, coerce it to
 # an integer and return it; otherwise, return *s* unchanged.
@@ -386,7 +393,7 @@ buf = ''
 # the middle of a 'data' event when we get an 'end' event.
 processing = false
 ended = false
-currentStream = process.stdin
+currentStream = input[0]()
 inputData = (data) ->
   currentStream.pause()
   processing = true
