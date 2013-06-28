@@ -9,7 +9,7 @@ Current status:
  * `-n` option implemented
  * no file arguments
  * Only some verbs are implemented:
-   * :, #, a, b, c, D, d, G, g, H, h, N, n, p, q, t, x
+   * :, #, a, b, c, D, d, G, g, H, h, i, N, n, p, q, t, x
    * s is mostly implemented (the w flag isn't)
  * numbers and `$` are implemented for addresses; context addresses are partially implemented.
 
