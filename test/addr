@@ -43,3 +43,11 @@ case $res in
   ('22') ;;
   (*) exit 6
 esac
+
+# Beginning-of-range and end-of-range cannot be the same line.
+res=$(printf '%s\n' 1 - 2 - 3 | sed '/-/,/-/d')
+case $res in
+  ('1
+3') ;;
+  (*) exit 5 ;;
+esac
