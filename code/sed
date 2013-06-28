@@ -6,6 +6,7 @@ posixbre = require 'posixbre'
 _ = require 'underscore'
 
 # Process arguments and collect script.
+scriptOption = false
 script = ''
 # The first two elements are "coffee" and the name of this script.
 process.argv.shift()
@@ -25,16 +26,18 @@ while process.argv.length
   else if '-e' == a
     process.argv.shift()
     script += process.argv.shift() + '\n'
+    scriptOption = true
   else if '-f' == a
     process.argv.shift()
-    script += fs.readFileSync(process.argv.shift()) + '\n'
+    script += fs.readFileSync(process.argv.shift())
+    scriptOption = true
   else if '-n' == a
     suppressed = true
     process.argv.shift()
   else if '-' == a[0]
     usage()
     process.exit 4
-if '' == script
+if not scriptOption
   script = process.argv.shift()
 
 if process.argv.length

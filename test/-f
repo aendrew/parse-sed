@@ -9,3 +9,10 @@ case $res in
   ('     foo') ;;
   (*) exit 9 ;;
 esac
+
+# empty file
+res=$(echo wrong | (sed -f .fixture/empty .fixture/right))
+case $res in
+  ('right') ;;
+  (*) exit 8 ;;
+esac
