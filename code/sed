@@ -1,14 +1,36 @@
 #!/usr/bin/env coffee
 
 async = require 'async'
-optimist = require 'optimist'
 posixbre = require 'posixbre'
 
-argv = optimist.posix().boolean('n').argv
-
+# Process arguments and collect script.
 script = ''
-if not argv.e and not argv.f
-  script = argv._.shift()
+# The first two elements are "coffee" and the name of this script.
+process.argv.shift()
+process.argv.shift()
+# true when output is suppressed with -n
+suppressed = false
+# Would love to use optimist to process options, but the order
+# is important, and optimist destroys it. We have to process -e
+# and -f in order.
+while process.argv.length
+  a = process.argv[0]
+  if '-' != a[0]
+    break
+  else if '--' == a
+    process.argv.shift()
+    break
+  else if '-e' == a
+    process.argv.shift()
+    script += process.argv.shift() + '\n'
+  else if '-n' == a
+    suppressed = true
+    process.argv.shift()
+  else if '-' == a[0]
+    usage()
+    process.exit 4
+if '' == script
+  script = process.argv.shift()
 
 # If *s* (a string) has the form of a number, coerce it to
 # an integer and return it; otherwise, return *s* unchanged.
@@ -157,7 +179,7 @@ class Sed
 
     endCycle = () =>
       # Pattern space may have been deleted (EG 'c' function).
-      if not argv.n and @pattern isnt null
+      if not suppressed and @pattern isnt null
         process.stdout.write @pattern + '\n'
       @pattern = null
       for append in appends
