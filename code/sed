@@ -54,7 +54,7 @@ asAddr = (s) ->
   if x[0] = '/'
     return RegExp posixbre.asRegExp x[1..-2]
 
-
+nesting = 0
 parseScript = (s) ->
   label = {}
   cmds = []
@@ -63,7 +63,7 @@ parseScript = (s) ->
     if s is null
       break
     cmds.push cmd
-    if cmd.verb == ':'
+    if cmd.verb in ':}'
       label[cmd.arg] = cmds.length
   return [cmds, label]
 # Parse the next command from string *s* returning a pair
@@ -78,7 +78,7 @@ parse1 = (s) ->
       )? # Optional Addr2
     )?
     (\s*!)?                         # Optional !
-    ([aci]\\|[bDdGgHhNnPpqstx#:])   # Command
+    ([aci]\\|[bDdGgHhNnPpqstx#:}{])   # Command
   ///g
   m = re.exec s
   if not m
@@ -94,6 +94,16 @@ parse1 = (s) ->
   # Comments
   if cmd.verb in '#'
     s = s.replace /^.*?(\n|$)/, ''
+  # Command blocks.
+  # These are implemented as branches and labels. The labels all
+  # start with '\n' because an ordinary label can't start with that.
+  if cmd.verb == '{'
+    cmd.arg = "\n#{nesting}"
+    cmd.positive = !cmd.positive
+    nesting += 1
+  if cmd.verb == '}'
+    nesting -= 1
+    cmd.arg = "\n#{nesting}"
   # Commands that take 'a\' style arguments.
   if cmd.verb in 'aci'
     # Delete through newline.
@@ -236,6 +246,8 @@ class Sed
     return [execute, endRange]
 
   evalFunction: (cmd, endRange, appends, nextCmd, nextLine) ->
+    if '{' == cmd.verb
+      @branch cmd.arg
     if 'a' == cmd.verb
       appends.push -> (cmd.arg + '\n')
     if 'b' == cmd.verb
