@@ -379,11 +379,16 @@ sed.label = label
 eachLine = (line, cb) ->
   return sed.indirectTo line, cb
 
+# Buffer into which data is collected until we have more than
+# one line (or one final line).
 buf = ''
+# *processing* and *ended* keep track of whether we are in
+# the middle of a 'data' event when we get an 'end' event.
 processing = false
 ended = false
-process.stdin.on 'data', (data) ->
-  process.stdin.pause()
+currentStream = process.stdin
+inputData = (data) ->
+  currentStream.pause()
   processing = true
   buf += data
   lines = buf.split '\n'
@@ -394,12 +399,15 @@ process.stdin.on 'data', (data) ->
     buf = lines.pop() + '\n'
   async.eachSeries lines, eachLine, () ->
     processing = false
-    process.stdin.resume()
+    currentStream.resume()
   if ended
     # Must have been set during the async call.
     sed.finalBuf()
-
-process.stdin.on 'end', () ->
+inputEnd = () ->
   ended = true 
   if not processing
     sed.finalBuf()
+
+currentStream.on 'data', inputData
+
+currentStream.on 'end', inputEnd
