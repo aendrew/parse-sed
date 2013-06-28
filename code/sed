@@ -1,5 +1,6 @@
 #!/usr/bin/env coffee
 
+fs = require 'fs'
 async = require 'async'
 posixbre = require 'posixbre'
 
@@ -23,6 +24,9 @@ while process.argv.length
   else if '-e' == a
     process.argv.shift()
     script += process.argv.shift() + '\n'
+  else if '-f' == a
+    process.argv.shift()
+    script += fs.readFileSync(process.argv.shift()) + '\n'
   else if '-n' == a
     suppressed = true
     process.argv.shift()
