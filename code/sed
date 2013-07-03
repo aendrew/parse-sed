@@ -102,7 +102,7 @@ parse1 = (s) ->
       )? # Optional Addr2
     )?
     (\s*!)?                             # Optional !
-    ([aci]\\|[bDdGgHhNnPpqstwx#:}{])    # Command
+    ([aci]\\|[bDdGgHhNnPpqrstwx#:}{])   # Command
   ///g
   m = re.exec s
   if not m
@@ -137,7 +137,7 @@ parse1 = (s) ->
     cmd.arg = m[1].replace /\\[\s\S]/g, (x) -> x[1]
     s = s[argre.lastIndex..]
   # Commands that take single line arguments.
-  if cmd.verb in ':btw'
+  if cmd.verb in ':btrw'
     argre = /[^\S\n]*(.*)\n?/g
     m = argre.exec s
     cmd.arg = m[1]
@@ -329,6 +329,8 @@ class Sed
     if 'q' == cmd.verb
       @quitter = true
       return nextCmd 'cycle'
+    if 'r' == cmd.verb
+      appends.push -> fs.readFileSync cmd.arg
     if 's' == cmd.verb
       cmd.re.lastIndex = 0
       matchCount = 0
