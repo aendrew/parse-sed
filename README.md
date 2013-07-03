@@ -9,7 +9,7 @@ Intended to be POSIX compliant (but not yet).
 Implemented
  * All POSIX options (`-e`, `-f`, and `-n`)
  * Implicit stdin and input from file arguments
- * The verbs {, :, #, a, b, c, D, d, G, g, H, h, i, N, n, p, q, t, x
+ * The verbs {, :, #, a, b, c, D, d, G, g, H, h, i, N, n, p, q, t, w, x
  * The verb s is mostly implemented (w flag is not)
  * Addresses: numeric, `$`; context address are partially implemented
  * Detection of `#n` at start of script
@@ -17,7 +17,7 @@ Implemented
 Not Yet Implemented
  * the w flag from the s verb
  * context addresses that start with a blackslash
- * the verbs l, r, w, y, =
+ * the verbs l, r, y, =
 
 # Tests
 
