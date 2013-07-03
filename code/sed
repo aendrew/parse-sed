@@ -102,7 +102,7 @@ parse1 = (s) ->
       )? # Optional Addr2
     )?
     (\s*!)?                             # Optional !
-    ([aci]\\|[bDdGgHhNnPpqrstwx#:}{])   # Command
+    ([aci]\\|[bDdGgHhNnPpqrstwx#:=}{])  # Command
   ///g
   m = re.exec s
   if not m
@@ -277,6 +277,8 @@ class Sed
     return [execute, endRange]
 
   evalFunction: (cmd, endRange, appends, nextCmd, nextLine) ->
+    if '=' == cmd.verb
+      process.stdout.write lineNumber + '\n'
     if '{' == cmd.verb
       @branch cmd.arg
     if 'a' == cmd.verb
@@ -408,8 +410,10 @@ class Sed
 
 sed = new Sed
 sed.label = label
+lineNumber = 0
 
 eachLine = (line, cb) ->
+  lineNumber += 1
   return sed.indirectTo line, cb
 
 # Buffer into which data is collected until we have more than
