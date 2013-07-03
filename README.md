@@ -9,13 +9,13 @@ Intended to be POSIX compliant (but not yet).
 Implemented
  * All POSIX options (`-e`, `-f`, and `-n`)
  * Implicit stdin and input from file arguments
- * The verbs {, :, #, a, b, c, D, d, G, g, H, h, i, N, n, p, q, s, t, w, x
+ * The verbs {, :, #, a, b, c, D, d, G, g, H, h, i, N, n, p, q, r, s, t, w, x
  * Addresses: numeric, `$`; context address are partially implemented
  * Detection of `#n` at start of script
 
 Not Yet Implemented
  * context addresses that start with a blackslash
- * the verbs l, r, y, =
+ * the verbs l, y, =
 
 # Tests
 
