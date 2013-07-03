@@ -142,7 +142,7 @@ parse1 = (s) ->
     m = argre.exec s
     cmd.arg = m[1]
     if cmd.verb in 'w'
-      cmd.stream = mkWrite(cmd.arg)
+      cmd.stream = mkWrite cmd.arg
     s = s[argre.lastIndex..]
   # s function has a special argument form.
   if cmd.verb == 's'
@@ -166,6 +166,8 @@ parse1 = (s) ->
     else
       cmd.nth = +not('g' in cmd.flags)
     cmd.file = m[5]
+    if cmd.file
+      cmd.stream = mkWrite cmd.file
     s = s[argre.lastIndex..]
     
   return [s, cmd]
@@ -365,6 +367,8 @@ class Sed
         @pattern = result.join ''
         if 'p' in cmd.flags
           process.stdout.write @pattern + '\n'
+        if 'w' in cmd.flags
+          cmd.stream.write @pattern + '\n'
     if 't' == cmd.verb
       if @substituted
         @branch cmd.arg

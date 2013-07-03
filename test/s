@@ -72,3 +72,14 @@ case $res in
   ('3') ;;
   (*) exit 3 ;;
 esac
+
+mkdir -p .out
+rm -f .out/s
+# Allow w flag
+res=$(printf '%s\n' 1 2 3 | sed 's/[12]/-&/w .out/s')
+case $(cat .out/s) in
+  ('-1
+-2') ;;
+  (*) exit 2 ;;
+esac
+
