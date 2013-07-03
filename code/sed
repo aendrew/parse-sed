@@ -57,6 +57,13 @@ intify = (s) ->
     return 0|x
   return s
 
+# Table of writable files.
+write = {}
+mkWrite = (path) ->
+  if not write[path]
+    write[path] = fs.createWriteStream(path)
+  return write[path]
+
 # Convert string to address, which is either '$', a number, or a
 # RegExp instance.
 asAddr = (s) ->
@@ -94,8 +101,8 @@ parse1 = (s) ->
       ( \d +| \$ | /(?:[^/\\\n]|\\.)*/ )
       )? # Optional Addr2
     )?
-    (\s*!)?                         # Optional !
-    ([aci]\\|[bDdGgHhNnPpqstx#:}{])   # Command
+    (\s*!)?                             # Optional !
+    ([aci]\\|[bDdGgHhNnPpqstwx#:}{])    # Command
   ///g
   m = re.exec s
   if not m
@@ -130,10 +137,12 @@ parse1 = (s) ->
     cmd.arg = m[1].replace /\\[\s\S]/g, (x) -> x[1]
     s = s[argre.lastIndex..]
   # Commands that take single line arguments.
-  if cmd.verb in ':bt'
+  if cmd.verb in ':btw'
     argre = /[^\S\n]*(.*)\n?/g
     m = argre.exec s
     cmd.arg = m[1]
+    if cmd.verb in 'w'
+      cmd.stream = mkWrite(cmd.arg)
     s = s[argre.lastIndex..]
   # s function has a special argument form.
   if cmd.verb == 's'
@@ -360,6 +369,8 @@ class Sed
       if @substituted
         @branch cmd.arg
       @substituted = false
+    if 'w' == cmd.verb
+      cmd.stream.write @pattern + '\n'
     if 'x' == cmd.verb
       [@pattern, @hold] = [@hold, @pattern]
     nextCmd()
