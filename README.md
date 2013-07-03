@@ -12,12 +12,12 @@ Implemented
  * The verbs {, :, #, a, b, c, D, d, G, g, H, h, i, N, n, p, q, t, x
  * The verb s is mostly implemented (w flag is not)
  * Addresses: numeric, `$`; context address are partially implemented
+ * Detection of `#n` at start of script
 
 Not Yet Implemented
  * the w flag from the s verb
  * context addresses that start with a blackslash
  * the verbs l, r, w, y, =
- * Detection of `#n` at start of script
 
 # Tests
 
