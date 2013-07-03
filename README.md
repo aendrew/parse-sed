@@ -17,6 +17,7 @@ Not Yet Implemented
  * the w flag from the s verb
  * context addresses that start with a blackslash
  * the verbs l, r, w, y, =
+ * Detection of `#n` at start of script
 
 # Tests
 
