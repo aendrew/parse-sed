@@ -1,0 +1,20 @@
+#!/bin/sed -nf
+# Construct a concordance
+# Reduce all sequences of space to a single space, and terminate line with a single space.
+:squash
+  s/$/ /
+  s/  */ /g
+  s/^ *//
+  t mark3
+:mark3
+  s/ /\n/3
+  t 3out
+  N
+  s/\n/ /
+  b squash
+:3out
+  P
+  s/[^ ]* //
+  s/\n/ /
+  t mark3
+  b mark3
