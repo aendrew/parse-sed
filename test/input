@@ -1,0 +1,13 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+[ -d .fixture ] || cd test
+
+# inputs
+res=$(echo wrong | sed 'N;s/\(.*\)\n\1/\1/' .fixture/right .fixture/right)
+case $res in
+  ('right') ;;
+  (*) exit 9 ;;
+esac

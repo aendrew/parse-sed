@@ -195,6 +195,9 @@ class Sed
       @finalLine = true
       eachLine lines[0], ->
 
+  fileEnd: ->
+    @finalBuf()
+
   beginScript: (line, nextLine) ->
     @inputLine line
     # List of delayed functions to call to append stuff after the
@@ -396,7 +399,6 @@ buf = ''
 # the middle of a 'data' event when we get an 'end' event.
 processing = false
 ended = false
-currentStream = input[0]()
 inputData = (data) ->
   currentStream.pause()
   processing = true
@@ -410,14 +412,21 @@ inputData = (data) ->
   async.eachSeries lines, eachLine, () ->
     processing = false
     currentStream.resume()
-  if ended
-    # Must have been set during the async call.
-    sed.finalBuf()
 inputEnd = () ->
   ended = true 
   if not processing
+    newStream()
+  else
+    console.warn "Got 'end' event while processing"
+
+currentStream = null
+newStream = () ->
+  getStream = input.shift()
+  if getStream
+    currentStream = getStream()
+    currentStream.on 'data', inputData
+    currentStream.on 'end', inputEnd
+  else
     sed.finalBuf()
 
-currentStream.on 'data', inputData
-
-currentStream.on 'end', inputEnd
+newStream()
