@@ -39,6 +39,9 @@ while process.argv.length
     process.exit 4
 if not scriptOption
   script = process.argv.shift()
+# Set -n if script starts with #n.
+if /^#n/.test script
+  suppressed = true
 
 if process.argv.length
   input = _.map process.argv, (name) ->

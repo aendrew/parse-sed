@@ -10,3 +10,11 @@ case $res in
 two') ;;
   (*) exit 9 ;;
 esac
+
+# An initial comment of #n is equivalent to -n
+res=$(printf '%s\n' 1 2 | sed '#n
+2p')
+case $res in
+  ('2') ;;
+  (*) exit 8 ;;
+esac
