@@ -1,0 +1,20 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+# Easy cases
+res=$(printf '%s\n' a b | sed -n 'l')
+case $res in
+  ('a$
+b$') ;;
+  (*) exit 9 ;;
+esac
+
+# Escapes
+res=$(printf '\\\a\b\f\r\t\v\n' | sed -n l)
+case $res in
+  ('\\\a\b\f\r\t\v$') ;;
+  (*) exit 8 ;;
+esac
+

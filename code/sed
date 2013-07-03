@@ -102,7 +102,7 @@ parse1 = (s) ->
       )? # Optional Addr2
     )?
     (\s*!)?                             # Optional !
-    ([aci]\\|[bDdGgHhNnPpqrstwx#:=}{])  # Command
+    ([aci]\\|[bDdGgHhlNnPpqrstwx#:=}{]) # Command
   ///g
   m = re.exec s
   if not m
@@ -309,6 +309,28 @@ class Sed
       @hold = @pattern
     if 'i' == cmd.verb
       process.stdout.write cmd.arg + '\n'
+    if 'l' == cmd.verb
+      x = @pattern.replace /[\s\S]/g, (s) ->
+        switch s
+          when '\\'
+            return '\\\\'
+          when '\x07' # Probably what \a is.
+            return '\\a'
+          when '\b'
+            return '\\b'
+          when '\f'
+            return '\\f'
+          when '\r'
+            return '\\r'
+          when '\t'
+            return '\\t'
+          when '\v'
+            return '\\v'
+          when '\n'
+            return '$\n'
+          else
+            return s
+      process.stdout.write x + '$\n'
     if 'N' == cmd.verb
       @indirectTo = (line) =>
         @inputLine line
