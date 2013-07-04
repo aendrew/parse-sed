@@ -4,7 +4,8 @@
   "description": "Unix sed for node.js",
   "main": "code/sed",
   "scripts": {
-    "test": "SED=${SED:-$(pwd)/code/sed} node_modules/.bin/urchin test"
+    "test": "npm install; SED=${SED:-$(pwd)/code/sed.js} node_modules/.bin/urchin test",
+    "install": "{ echo '#!/usr/bin/env node'; coffee -p code/sed.coffee;} > code/tmp.js && mv code/tmp.js code/sed.js && chmod +x code/sed.js"
   },
   "repository": {
     "type": "git",
