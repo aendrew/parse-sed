@@ -167,6 +167,9 @@ parse1 = (s) ->
     cmd.delimiter = m[1]
     cmd.string1 = unEscape m[2]
     cmd.re = RegExp posixbre.asRegExp(m[2]), 'g'
+    # Empty REs are slightly special.
+    if m[2] == ''
+      cmd.re = null
     cmd.replacement = m[3]
     if cmd.verb == 'y'
       cmd.replacement = unEscape cmd.replacement
@@ -385,13 +388,19 @@ class Sed
           x
     nextCmd()
 
+  apply: (re) ->
+    @lastAppliedRE = re
+
   verbs: (cmd) ->
     re = cmd.re
+    if re is null
+      re = @lastAppliedRE
     re.lastIndex = 0
     matchCount = 0
     substituted = false
     result = []
     lastIndex = 0
+    @apply re
     while true
       m = re.exec @pattern
       if not m
