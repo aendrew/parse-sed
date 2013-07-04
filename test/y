@@ -1,0 +1,11 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+res=$(printf '%s\n' a b | sed 'y/abc/ABC/')
+case $res in
+  ('A
+B') ;;
+  (*) exit 9 ;;
+esac

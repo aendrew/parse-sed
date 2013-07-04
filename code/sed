@@ -101,8 +101,8 @@ parse1 = (s) ->
       ( \d +| \$ | /(?:[^/\\\n]|\\.)*/ )
       )? # Optional Addr2
     )?
-    (\s*!)?                             # Optional !
-    ([aci]\\|[bDdGgHhlNnPpqrstwx#:=}{]) # Command
+    (\s*!)?                                     # Optional !
+    ([aci]\\|[bDdGgHhlNnPpqrstwxy#:=}{])        # Command
   ///g
   m = re.exec s
   if not m
@@ -145,7 +145,8 @@ parse1 = (s) ->
       cmd.stream = mkWrite cmd.arg
     s = s[argre.lastIndex..]
   # s function has a special argument form.
-  if cmd.verb == 's'
+  # kinda of shared by y.
+  if cmd.verb in 'sy'
     argre = ///
       ([^\\\n]) # delimiter, usually /
       ((?:(?!\1)[^\\\n]|\\.)*) # BRE
@@ -157,6 +158,7 @@ parse1 = (s) ->
     m = argre.exec s
     cmd.arg = m[1..5]
     cmd.delimiter = m[1]
+    cmd.string1 = m[2]
     cmd.re = RegExp posixbre.asRegExp(m[2]), 'g'
     cmd.replacement = m[3]
     cmd.flags = m[4]
@@ -403,6 +405,13 @@ class Sed
       cmd.stream.write @pattern + '\n'
     if 'x' == cmd.verb
       [@pattern, @hold] = [@hold, @pattern]
+    if 'y' == cmd.verb
+      @pattern = @pattern.replace /[\s\S]/g, (x) ->
+        i = cmd.string1.indexOf x
+        if i >= 0
+          cmd.replacement[i]
+        else
+          x
     nextCmd()
 
   inputLine: (line) ->
