@@ -14,7 +14,7 @@ Implemented
  * Detection of `#n` at start of script
 
 Not Yet Implemented
- * context addresses that start with a blackslash
+ * Context addresses that start with a blackslash
  * Empty REs in addresses
  * Handling of Exit Status
 
