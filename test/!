@@ -3,9 +3,18 @@
 
 alias sed="$SED"
 
+# Simple case
 res=$(printf '%s\n' 1 2 3 4 | sed -n '2,3!p')
 case $res in
   ('1
 4') ;;
   (*) exit 9 ;;
+esac
+
+# Multiple ! are acceptable.
+res=$(printf '%s\n' 1 2 3 4 | sed -n '1,/2/!!p')
+case $res in
+  ('3
+4') ;;
+  (*) exit 8 ;;
 esac

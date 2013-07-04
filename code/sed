@@ -108,7 +108,7 @@ parse1 = (s) ->
       ( \d +| \$ | /(?:[^/\\\n]|\\.)*/ )
       )? # Optional Addr2
     )?
-    (\s*!)?                                     # Optional !
+    (\s*!+)?                                    # Optional !
     ([aci]\\|[bDdGgHhlNnPpqrstwxy#:=}{])        # Command
   ///g
   m = re.exec s
