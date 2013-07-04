@@ -12,10 +12,10 @@ Implemented
  * All POSIX verbs (`#:=abcDdGgHhilNnpqrstwxy{`)
  * Addresses: numeric, `$`; context address are partially implemented
  * Detection of `#n` at start of script
+ * Empty REs in addresses and `s` pattern.
 
 Not Yet Implemented
  * Context addresses that start with a blackslash
- * Empty REs in addresses
  * Handling of Exit Status
 
 # Tests
