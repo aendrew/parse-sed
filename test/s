@@ -13,19 +13,13 @@ two
   (*) exit 9 ;;
 esac
 
-# g flag.
-res=$(printf 'foo\n' | sed 's/o//g
-s/z*/x/g')
+# g and p flag.
+res=$(printf 'foo\n' | sed -n 's/o//g
+s/z*/x/g
+s/x/a/p')
 case $res in
-  ('xfx') ;;
+  ('afx') ;;
   (*) exit 8 ;;
-esac
-
-# p flag.
-res=$(printf '%s\n' 1 2 | sed -n 's/2/two/p')
-case $res in
-  ('two') ;;
-  (*) exit 7 ;;
 esac
 
 # Numeric flag.
