@@ -51,3 +51,12 @@ case $res in
 3') ;;
   (*) exit 5 ;;
 esac
+
+# Empty RE uses last applied RE.
+res=$(printf '%s\n' 1a 2 3a 4 | sed -n '/a/,//p')
+case $res in
+  ('1a
+2
+3a') ;;
+  (*) exit 4 ;;
+esac

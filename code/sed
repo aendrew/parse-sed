@@ -83,7 +83,10 @@ asAddr = (s) ->
     return x
   # :todo: handle \cfooc
   if x[0] = '/'
-    return RegExp posixbre.asRegExp x[1..-2]
+    re = x[1..-2]
+    if re == ''
+      return 'empty'
+    return RegExp posixbre.asRegExp re
 
 nesting = 0
 parseScript = (s) ->
@@ -210,7 +213,10 @@ class Sed
       return @currentLine == addr
     if addr == '$'
       return @finalLine
+    if addr == 'empty'
+      addr = @lastAppliedRE
     if addr instanceof RegExp
+      @apply addr
       return addr.test @pattern
 
   finalBuf: ->
