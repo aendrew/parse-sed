@@ -64,6 +64,13 @@ mkWrite = (path) ->
     write[path] = fs.createWriteStream(path)
   return write[path]
 
+# Remove \c escape sequences from a string.
+unEscape  = (s) ->
+  s.replace /[^\\]|\\[\s\S]/g, (x) ->
+    if x[0] == '\\'
+      return x[1]
+    return x
+
 # Convert string to address, which is either '$', a number, or a
 # RegExp instance.
 asAddr = (s) ->
@@ -158,9 +165,11 @@ parse1 = (s) ->
     m = argre.exec s
     cmd.arg = m[1..5]
     cmd.delimiter = m[1]
-    cmd.string1 = m[2]
+    cmd.string1 = unEscape m[2]
     cmd.re = RegExp posixbre.asRegExp(m[2]), 'g'
     cmd.replacement = m[3]
+    if cmd.verb == 'y'
+      cmd.replacement = unEscape cmd.replacement
     cmd.flags = m[4]
     digits = cmd.flags.match /\d+/
     if digits

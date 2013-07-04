@@ -20,3 +20,12 @@ a
 r') ;;
   (*) exit 8 ;;
 esac
+
+# Some backslashing
+res=$(printf '%s\n' 1 2 '\' | sed 'y1\121X\\1')
+case $res in
+  ('X
+\
+\') ;;
+  (*) exit 7 ;;
+esac
