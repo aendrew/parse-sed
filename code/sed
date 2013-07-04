@@ -386,13 +386,14 @@ class Sed
     nextCmd()
 
   verbs: (cmd) ->
-    cmd.re.lastIndex = 0
+    re = cmd.re
+    re.lastIndex = 0
     matchCount = 0
     substituted = false
     result = []
     lastIndex = 0
     while true
-      m = cmd.re.exec @pattern
+      m = re.exec @pattern
       if not m
         break
       matchCount += 1
@@ -412,10 +413,10 @@ class Sed
           @pattern.slice(lastIndex, m.index)
           repl
         ]
-        lastIndex = cmd.re.lastIndex
-        if m.index == cmd.re.lastIndex
+        lastIndex = re.lastIndex
+        if m.index == re.lastIndex
           # Zero-width match.
-          cmd.re.lastIndex += 1
+          re.lastIndex += 1
       if cmd.nth and matchCount >= cmd.nth
         break
     if substituted

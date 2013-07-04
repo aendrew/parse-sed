@@ -22,6 +22,15 @@ case $res in
   (*) exit 8 ;;
 esac
 
+# Empty pattern uses last pattern.
+res=$(printf '%s\n' 1 2 3 | sed '1s/1/x1/;s//z&/;2s/3/w/')
+case $res in
+  ('xz1
+2
+z3') ;;
+  # (*) exit 7 ;;
+esac
+
 # Numeric flag.
 # From POSIX spec: "The command s/a/A/2047 should be able to
 #   substitute the 2047th occurrence of a on a line."
