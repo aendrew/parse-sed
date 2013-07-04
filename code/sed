@@ -367,45 +367,7 @@ class Sed
     if 'r' == cmd.verb
       appends.push -> fs.readFileSync cmd.arg
     if 's' == cmd.verb
-      cmd.re.lastIndex = 0
-      matchCount = 0
-      substituted = false
-      result = []
-      lastIndex = 0
-      while true
-        m = cmd.re.exec @pattern
-        if not m
-          break
-        matchCount += 1
-        if 'g' in cmd.flags or cmd.nth == matchCount
-          substituted = @substituted = true
-          repl = cmd.replacement.replace /\\.|[^\\]/g, (particle) ->
-            if particle == '&'
-              return m[0]
-            if particle[0] != '\\'
-              return particle
-            # particle[0] is '\\'
-            if particle[1] in '&\\'
-              return particle[1]
-            if /[1-9]/.test particle[1]
-              return m[particle[1]] or ''
-          result = result.concat [
-            @pattern.slice(lastIndex, m.index)
-            repl
-          ]
-          lastIndex = cmd.re.lastIndex
-          if m.index == cmd.re.lastIndex
-            # Zero-width match.
-            cmd.re.lastIndex += 1
-        if cmd.nth and matchCount >= cmd.nth
-          break
-      if substituted
-        result.push @pattern.slice lastIndex
-        @pattern = result.join ''
-        if 'p' in cmd.flags
-          process.stdout.write @pattern + '\n'
-        if 'w' in cmd.flags
-          cmd.stream.write @pattern + '\n'
+      @verbs cmd
     if 't' == cmd.verb
       if @substituted
         @branch cmd.arg
@@ -422,6 +384,47 @@ class Sed
         else
           x
     nextCmd()
+
+  verbs: (cmd) ->
+    cmd.re.lastIndex = 0
+    matchCount = 0
+    substituted = false
+    result = []
+    lastIndex = 0
+    while true
+      m = cmd.re.exec @pattern
+      if not m
+        break
+      matchCount += 1
+      if 'g' in cmd.flags or cmd.nth == matchCount
+        substituted = @substituted = true
+        repl = cmd.replacement.replace /\\.|[^\\]/g, (particle) ->
+          if particle == '&'
+            return m[0]
+          if particle[0] != '\\'
+            return particle
+          # particle[0] is '\\'
+          if particle[1] in '&\\'
+            return particle[1]
+          if /[1-9]/.test particle[1]
+            return m[particle[1]] or ''
+        result = result.concat [
+          @pattern.slice(lastIndex, m.index)
+          repl
+        ]
+        lastIndex = cmd.re.lastIndex
+        if m.index == cmd.re.lastIndex
+          # Zero-width match.
+          cmd.re.lastIndex += 1
+      if cmd.nth and matchCount >= cmd.nth
+        break
+    if substituted
+      result.push @pattern.slice lastIndex
+      @pattern = result.join ''
+      if 'p' in cmd.flags
+        process.stdout.write @pattern + '\n'
+      if 'w' in cmd.flags
+        cmd.stream.write @pattern + '\n'
 
   inputLine: (line) ->
     """Appends the line to pattern space, and updates
