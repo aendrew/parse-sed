@@ -15,7 +15,8 @@ Implemented
 
 Not Yet Implemented
  * context addresses that start with a blackslash
- * Implicit pattern for `s`
+ * Empty REs in addresses
+ * Handling of Exit Status
 
 # Tests
 
