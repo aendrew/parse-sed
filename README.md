@@ -2,7 +2,16 @@
 
 Unix sed for node.js
 
-Intended to be POSIX compliant (but not yet).
+Intended to be POSIX compliant.
+
+Any incorrect behaviour for a POSIX compliant script will be
+considered a bug. Please report it at
+https://github.com/drj11/sed.js/issues
+
+# Source Code
+
+github: https://github.com/drj11/sed.js
+git: https://github.com/drj11/sed.js.git
 
 # Current implementation status
 
