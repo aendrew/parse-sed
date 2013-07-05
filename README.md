@@ -12,6 +12,7 @@ https://github.com/drj11/sed.js/issues
 
 github: https://github.com/drj11/sed.js
 git: https://github.com/drj11/sed.js.git
+tar: https://github.com/drj11/sed.js/archive/sed.js-0.0.0.tar.gz
 
 # Current implementation status
 
