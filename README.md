@@ -12,10 +12,8 @@ Implemented
  * All POSIX verbs (`#:=abcDdGgHhilNnpqrstwxy{`)
  * All (POSIX) addresses: numeric, `$`, context
  * Detection of `#n` at start of script
- * Empty REs in addresses and `s` pattern.
-
-Not Yet Implemented
- * Handling of Exit Status
+ * Empty REs in addresses and `s` pattern
+ * Correct Exit Status
 
 # Tests
 
