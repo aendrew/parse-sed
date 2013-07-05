@@ -81,9 +81,17 @@ asAddr = (s) ->
   x = intify s
   if typeof x == 'number'
     return x
-  # :todo: handle \cfooc
-  if x[0] = '/'
-    re = x[1..-2]
+  if x[0] in '\\/'
+    if x[0] == '/'
+      re = x[1..-2]
+    else
+      # handle \cfooc
+      delim = x[0..1]
+      x = x[2..-2]
+      re = x.replace /[^\\]|\\./g, (c) ->
+        if c == delim
+          return c[1]
+        return c
     if re == ''
       return 'empty'
     return RegExp posixbre.asRegExp re
@@ -106,12 +114,12 @@ parse1 = (s) ->
   # The REs for addrs are not very right.
   re = ///
     (?:
-      ( \d+ | \$ | /(?:[^/\\\n]|\\.)*/ ) # Addr
+      ( \d+ | \$ | (?:\\|(?=/))(.)(?:(?!\2)(?:[^\\\n]|\\.))*\2 ) # Addr1
       (?:,
-      ( \d +| \$ | /(?:[^/\\\n]|\\.)*/ )
+      ( \d+ | \$ | (?:\\|(?=/))(.)(?:(?!\4)(?:[^\\\n]|\\.))*\4 ) # Addr2
       )? # Optional Addr2
     )?
-    (\s*!+)?                                    # Optional !
+    (\s*!+)? # m[5]                             # Optional !
     ([aci]\\|[bDdGgHhlNnPpqrstwxy#:=}{])        # Command
   ///g
   m = re.exec s
@@ -119,11 +127,11 @@ parse1 = (s) ->
     return [null, null]
   cmd = {}
   addr1 = asAddr m[1]
-  addr2 = asAddr m[2]
+  addr2 = asAddr m[3]
   cmd.addr1 = addr1 if addr1?
   cmd.addr2 = addr2 if addr2?
-  cmd.positive = not m[3]
-  cmd.verb = m[4][0]
+  cmd.positive = not m[5]
+  cmd.verb = m[6][0]
   s = s[re.lastIndex..]
   # Comments
   if cmd.verb in '#'

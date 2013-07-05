@@ -60,3 +60,11 @@ case $res in
 3a') ;;
   (*) exit 4 ;;
 esac
+
+# Context address with \c style delimiters.
+res=$(printf '%s\n' foo bar baz | sed -n '\czcp;\f\ffp')
+case $res in 
+  ('foo
+baz') ;;
+  (*) exit 3 ;;
+esac
