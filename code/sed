@@ -512,15 +512,17 @@ inputData = (data) ->
   async.eachSeries lines, eachLine, () ->
     processing = false
     currentStream.resume()
+    if ended
+      # Must have got 'end' event while processing
+      newStream()
 inputEnd = () ->
   ended = true 
   if not processing
     newStream()
-  else
-    console.warn "Got 'end' event while processing"
 
 currentStream = null
 newStream = () ->
+  ended = false
   getStream = input.shift()
   if getStream
     currentStream = getStream()
