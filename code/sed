@@ -64,12 +64,19 @@ mkWrite = (path) ->
     write[path] = fs.createWriteStream(path)
   return write[path]
 
+# Remove a leading '\\' from x.
+unEscape1 = (x) ->
+  if x[0] == '\\'
+    return x[1]
+  return x
+
 # Remove \c escape sequences from a string.
 unEscape  = (s) ->
-  s.replace /[^\\]|\\[\s\S]/g, (x) ->
-    if x[0] == '\\'
-      return x[1]
-    return x
+  s.replace /[^\\]|\\[\s\S]/g, unEscape1
+
+# Replace \<newline> with newline.
+trueNewline = (s) ->
+  s.replace /[^\\]|\\\n/g, unEscape1
 
 # Convert string to address, which is either '$', a number, or a
 # RegExp instance.
@@ -169,7 +176,7 @@ parse1 = (s) ->
       ([^\\\n]) # delimiter, usually /
       ((?:(?!\1)[^\\\n]|\\.)*) # BRE
       \1
-      ((?:(?!\1)[^\\\n]|\\.)*) # replacement
+      ((?:(?!\1)[^\\\n]|\\[\s\S])*) # replacement
       \1
       ([\dgnpw]*) (?:[^\S\n]+(.+))? # flags
     ///g
@@ -182,6 +189,7 @@ parse1 = (s) ->
     if m[2] == ''
       cmd.re = null
     cmd.replacement = m[3]
+    cmd.replacement = trueNewline cmd.replacement
     if cmd.verb == 'y'
       cmd.replacement = unEscape cmd.replacement
     cmd.flags = m[4]

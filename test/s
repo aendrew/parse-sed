@@ -86,3 +86,14 @@ case $(cat .out/s) in
   (*) exit 2 ;;
 esac
 
+# Embedded newline
+res=$(printf '%s\n' 1 2 3 | sed 's/[12]/&\
+foo/')
+case $res in
+  ('1
+foo
+2
+foo
+3') ;;
+  (*) exit 1 ;;
+esac
