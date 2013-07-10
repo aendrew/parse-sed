@@ -279,7 +279,8 @@ class Sed
       # and begin the next cycle.
       if @cmdIndex >= commands.length or stop
         return endCycle()
-      evalCommand commands[@cmdIndex++], script1
+      evalCommand commands[@cmdIndex++], (x) ->
+        setImmediate script1, x
 
     script1()
 
