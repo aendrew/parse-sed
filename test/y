@@ -29,3 +29,12 @@ case $res in
 \') ;;
   (*) exit 7 ;;
 esac
+
+# Newlines are acceptable
+res=$(printf 'foonbar\n' | sed 'y,n,\
+,')
+case $res in
+  ('foo
+bar') ;;
+  (*) exit 6 ;;
+esac
