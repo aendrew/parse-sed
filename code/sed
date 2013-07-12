@@ -520,14 +520,13 @@ inputEnd = () ->
   if not processing
     newStream()
 
-currentStream = null
 newStream = () ->
   ended = false
   getStream = input.shift()
   if getStream
-    currentStream = getStream()
-    currentStream.on 'data', inputData
-    currentStream.on 'end', inputEnd
+    stream = getStream()
+    stream.on 'data', inputData
+    stream.on 'end', inputEnd
   else
     sed.finalBuf()
 
