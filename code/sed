@@ -500,7 +500,7 @@ buf = ''
 processing = false
 ended = false
 inputData = (data) ->
-  currentStream.pause()
+  @pause()
   processing = true
   buf += data
   lines = buf.split '\n'
@@ -509,9 +509,9 @@ inputData = (data) ->
     # Retain last line of data, as it might be the final
     # line of input.
     buf = lines.pop() + '\n'
-  async.eachSeries lines, eachLine, () ->
+  async.eachSeries lines, eachLine, () =>
     processing = false
-    currentStream.resume()
+    @resume()
     if ended
       # Must have got 'end' event while processing
       newStream()
