@@ -1,6 +1,8 @@
 # sed.js
 
-Unix sed for node.js
+ES6 module fork of [drj11/sed.js](https://github.com/drj11)
+
+This is intended to open up sed.js' API to be more useful as part of NodeJS scripts.
 
 Intended to be POSIX compliant.
 
@@ -29,4 +31,3 @@ Implemented
 
     npm install # to install urchin
     npm test
-
