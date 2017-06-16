@@ -1,6 +1,6 @@
 /**
  * @file
- * Unit tests for parse-sed
+ * Functional tests for parse-sed
  */
 
 import {readFileSync} from 'fs';

@@ -1,6 +1,6 @@
-# sed.js [![CircleCI](https://circleci.com/gh/aendrew/parse-sed.svg?style=svg)](https://circleci.com/gh/aendrew/parse-sed)[![codecov](https://codecov.io/gh/aendrew/parse-sed/branch/master/graph/badge.svg)](https://codecov.io/gh/aendrew/parse-sed)
+# parse-sed [![CircleCI](https://circleci.com/gh/aendrew/parse-sed.svg?style=svg)](https://circleci.com/gh/aendrew/parse-sed)[![codecov](https://codecov.io/gh/aendrew/parse-sed/branch/master/graph/badge.svg)](https://codecov.io/gh/aendrew/parse-sed)
 
-ES6 module fork of [drj11/sed.js](https://github.com/drj11)
+CommonJS module fork of [drj11/sed.js](https://github.com/drj11)
 
 This is intended to open up sed.js' API to be more useful as part of NodeJS scripts.
 
@@ -17,4 +17,3 @@ Implemented
  * All (POSIX) addresses: numeric, `$`, context
  * Detection of `#n` at start of script
  * Empty REs in addresses and `s` pattern
-
