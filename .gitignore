@@ -1,4 +1,4 @@
+_old
 node_modules
-.out
-.urchin.log
-ignore
+.nyc_output
+coverage

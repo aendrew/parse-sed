@@ -1,9 +1,3 @@
-#!/bin/sh
-# Adds two decimal numbers
-
-alias sed=${SED:-sed}
-
-printf '%s\n' "${*-$(cat)}" | sed -n '
 s/[0-9]\{1,\}/&,/g
 s/,/;/
 :loop
@@ -25,8 +19,7 @@ s/,/;/
     t carry
   s/:/;/
   b loop
-
 :quit
   s/ *,.*//
   s/;//
-p'
+p

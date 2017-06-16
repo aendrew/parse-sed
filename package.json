@@ -1,44 +1,33 @@
 {
-  "name": "sed.js",
-  "version": "0.0.0",
-  "description": "Unix sed for node.js",
-  "main": "code/sed",
+  "name": "parse-sed",
+  "version": "0.0.1",
+  "description": "API for parsing the sed langauge, forked from drj11/sed.js",
+  "main": "parse-sed.js",
   "scripts": {
-    "test": "npm install; SED=${SED:-$(pwd)/code/sed.js} node_modules/.bin/urchin test"
+    "test": "nyc ava",
+    "report-coverage": "nyc report --reporter=lcov | codecov",
+    "lint": "xo"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/drj11/sed.js.git"
+    "url": "git://github.com/aendrew/parse-sed.git"
   },
   "keywords": [
     "sed"
   ],
-  "author": "David Jones <drj@pobox.com>",
-  "license": "BSD",
+  "author": [
+    "Ændrew Rininsland <aendrew@aendrew.com>",
+    "David Jones <drj@pobox.com>"
+  ],
+  "license": "BSD-2-Clause",
   "readmeFilename": "README.md",
   "dependencies": {
-    "async": "~0.2.8",
-    "posixbre": "0.0.0",
-    "underscore": "~1.4.4"
+    "posixbre": "0.0.0"
   },
   "devDependencies": {
-    "coffee-script": "^1.12.6",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^15.0.1",
-    "eslint-plugin-import": "^2.3.0",
-    "eslint-plugin-jsx-a11y": "^5.0.3",
-    "eslint-plugin-react": "^7.1.0",
-    "urchin": "~0.0.1"
-  },
-  "gitHead": "0be33bb77b7504cacfd5535a37369dffbc8de34b",
-  "directories": {
-    "test": "test"
-  },
-  "eslintConfig": {
-    "extends": "airbnb",
-    "rules": {
-      "import/no-unresolved": [2, { "caseSensitive": false }],
-      "no-console": [0]
-    }
+    "ava": "^0.19.1",
+    "codecov": "^2.2.0",
+    "nyc": "^11.0.2",
+    "xo": "^0.18.2"
   }
 }
