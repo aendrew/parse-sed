@@ -1,4 +1,4 @@
-# sed.js
+# sed.js [![CircleCI](https://circleci.com/gh/aendrew/parse-sed.svg?style=svg)](https://circleci.com/gh/aendrew/parse-sed)[![codecov](https://codecov.io/gh/aendrew/parse-sed/branch/master/graph/badge.svg)](https://codecov.io/gh/aendrew/parse-sed)
 
 ES6 module fork of [drj11/sed.js](https://github.com/drj11)
 
