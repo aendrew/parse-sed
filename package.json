@@ -1,7 +1,7 @@
 {
   "name": "parse-sed",
   "version": "0.0.1",
-  "description": "API for parsing the sed langauge, forked from drj11/sed.js",
+  "description": "API for parsing the sed language, forked from drj11/sed.js",
   "main": "parse-sed.js",
   "scripts": {
     "test": "nyc ava",
