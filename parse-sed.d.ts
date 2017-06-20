@@ -29,6 +29,6 @@ declare namespace parseSed {
   }
 }
 
-declare function parseSed (instruction: string) : parseSed.Result;
+declare function parseSed (instruction: string) : parseSed.Expression;
 
 export = parseSed;
