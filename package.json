@@ -2,7 +2,7 @@
   "name": "parse-sed",
   "version": "0.0.1",
   "description": "API for parsing the sed language, forked from drj11/sed.js",
-  "main": "parse-sed.js",
+  "main": "./parse-sed.js",
   "scripts": {
     "test": "nyc ava",
     "report-coverage": "nyc report --reporter=lcov | codecov",
@@ -29,5 +29,6 @@
     "codecov": "^2.2.0",
     "nyc": "^11.0.2",
     "xo": "^0.18.2"
-  }
+  },
+  "types": "./parse-sed.d.ts"
 }
