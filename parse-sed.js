@@ -135,7 +135,7 @@ module.exports = script => {
 			}
 			cmd.replacement = m[3];
 			cmd.replacement = trueNewline(cmd.replacement);
-			if (cmd.verb === 'y') {
+			if (cmd.verb === 'y' || cmd.verb === 's') { // @TODO is this legit?
 				cmd.replacement = unEscape(cmd.replacement);
 			}
 			cmd.flags = m[4];
