@@ -1,0 +1,12 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+[ -d .fixture ] || cd test
+
+res=$(printf '%s\n' 1 2 3 | sed -n '1p;/2/r .fixture/file')
+case $res in
+  ('1
+foo') ;;
+  (*) exit 9 ;;
+esac

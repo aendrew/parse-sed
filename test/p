@@ -1,0 +1,11 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+res=$(printf 'line %s\n' 1 2 3 4 | sed -n '2,3p')
+case $res in
+  ('line 2
+line 3') ;;
+  (*) exit 9 ;;
+esac

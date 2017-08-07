@@ -1,0 +1,17 @@
+#!/bin/sh
+: ${SED?}
+alias sed="$SED"
+
+# Many iterations of a loop.
+res=$(printf 'foo\n' | sed ':loop
+s/./&&/;t reset
+:reset
+s/./&/2000
+t quit
+b loop
+:quit
+q' | wc -c)
+case $res in
+  (2001) ;;
+  (*) exit 9 ;;
+esac

@@ -1,0 +1,40 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+# Simple case
+res=$(printf '%s\n' a b | sed 'y/abc/ABC/')
+case $res in
+  ('A
+B') ;;
+  (*) exit 9 ;;
+esac
+
+# A variety of delimiters.
+res=$(printf '%s\n' 1 2 3 | sed 'y;123;321;
+y[4321[pqrs[;yyqrsybary')
+case $res in
+  ('b
+a
+r') ;;
+  (*) exit 8 ;;
+esac
+
+# Some backslashing
+res=$(printf '%s\n' 1 2 '\' | sed 'y1\121X\\1')
+case $res in
+  ('X
+\
+\') ;;
+  (*) exit 7 ;;
+esac
+
+# Newlines are acceptable
+res=$(printf 'foonbar\n' | sed 'y,n,\
+,')
+case $res in
+  ('foo
+bar') ;;
+  (*) exit 6 ;;
+esac

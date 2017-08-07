@@ -1,0 +1,12 @@
+#!/bin/sh
+: ${SED?}
+alias sed="${SED}"
+
+# Provokes "Got 'end' event while processing"
+mkdir -p .out
+yes foo | sed 2000q > .out/foo
+res=$(sed -n '$=' .out/foo)
+case $res in
+  (2000) ;;
+  (*) exit 9 ;;
+esac

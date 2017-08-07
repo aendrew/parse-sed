@@ -1,0 +1,27 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+[ -d .fixture ] || cd test
+
+# from http://sed.sourceforge.net/grabbag/tutorials/sed1line.txt
+res=$(echo foo | sed -f .fixture/-f)
+case $res in
+  ('     foo') ;;
+  (*) exit 9 ;;
+esac
+
+# empty file
+res=$(echo wrong | (sed -f .fixture/empty .fixture/right))
+case $res in
+  ('right') ;;
+  (*) exit 8 ;;
+esac
+
+# multiple -f options
+res=$(echo bar | sed -f .fixture/empty -f .fixture/-f)
+case $res in
+  ('     bar') ;;
+  (*) exit 7 ;;
+esac

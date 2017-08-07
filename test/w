@@ -1,0 +1,19 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+mkdir -p .out
+rm -f .out/w
+res=$(printf '%s\n' 1 2 3 | sed '1!w .out/w')
+case $res in
+  ('1
+2
+3') ;;
+  (*) exit 9 ;;
+esac
+case $(cat .out/w) in
+  ('2
+3') ;;
+  (*) exit 8 ;;
+esac

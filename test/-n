@@ -1,0 +1,10 @@
+#!/bin/sh
+: ${SED?}
+
+alias sed="$SED"
+
+res=$(echo foo | sed -n p)
+case $res in
+  ('foo') ;;
+  (*) exit 9 ;;
+esac

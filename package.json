@@ -30,5 +30,15 @@
     "nyc": "^11.0.2",
     "xo": "^0.18.2"
   },
-  "types": "./parse-sed.d.ts"
+  "types": "./parse-sed.d.ts",
+  "xo": {
+    "overrides": [
+      {
+        "files": "test/**/*.js",
+        "rules": {
+          "unicorn/filename-case": [0]
+        }
+      }
+    ]
+  }
 }
